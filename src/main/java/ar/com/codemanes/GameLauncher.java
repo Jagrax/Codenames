@@ -6,7 +6,6 @@ import ar.com.codemanes.entity.Team;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-import com.corundumstudio.socketio.listener.DisconnectListener;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,7 @@ public class GameLauncher {
             "Amarillo", "warning",
             "Cyan", "info");
     private final SocketIOServer server;
-    private Map<String, Set<String>> wordsFilesMap = new HashMap<>();
+    private final Map<String, Set<String>> wordsFilesMap = new HashMap<>();
     private final Game game = new Game();
 
     public GameLauncher(String hostName, int port, String wordsFilesFolderPath) {
@@ -117,12 +116,9 @@ public class GameLauncher {
             gameUpdate();
         });
 
-        server.addDisconnectListener(new DisconnectListener() {
-            @Override
-            public void onDisconnect(SocketIOClient client) {
-                game.removePlayer(client);
-                gameUpdate();
-            }
+        server.addDisconnectListener(client -> {
+            game.removePlayer(client);
+            gameUpdate();
         });
 
         // GAME STUFF
