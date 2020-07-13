@@ -442,10 +442,6 @@ public class Game {
         if (players != null && !players.isEmpty()) {
             players.removeIf(player -> player.getId().equals(client.getSessionId().toString()));
         }
-
-        if (getTurnTimer() != null && players == null || players.isEmpty()) {
-            getTurnTimer().cancel();
-        }
     }
 
     /**

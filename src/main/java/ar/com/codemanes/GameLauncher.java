@@ -19,20 +19,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GameLauncher {
 
     private final static Logger log = LoggerFactory.getLogger(GameLauncher.class);
 
-    private final Map<String, String> coloursMap = Map.of(
-            "Rojo", "danger",
-            "Azul", "primary",
-            "Verde", "success",
-            "Amarillo", "warning",
-            "Cyan", "info");
+    private final Map<String, String> coloursMap = Stream.of(
+            new AbstractMap.SimpleEntry<>("Rojo", "danger"),
+            new AbstractMap.SimpleEntry<>("Azul", "primary"),
+            new AbstractMap.SimpleEntry<>("Verde", "success"),
+            new AbstractMap.SimpleEntry<>("Amarillo", "warning"),
+            new AbstractMap.SimpleEntry<>("Cyan", "info"))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     private final SocketIOServer server;
     private final Map<String, Set<String>> wordsFilesMap = new HashMap<>();
-    private final Game game = new Game();
+    private Game game = new Game();
 
     public GameLauncher(String hostName, int port, String wordsFilesFolderPath) {
         try {
@@ -58,7 +61,16 @@ public class GameLauncher {
 
         server = new SocketIOServer(configuration);
 
-        server.addConnectListener(client -> log.info("Se ha conectado el cliente " + client));
+        server.addConnectListener(client -> log.info("Se ha conectado el cliente " + client.getSessionId().toString()));
+
+        server.addDisconnectListener(client -> {
+            game.removePlayer(client);
+//            if (game.getPlayers().isEmpty()) {
+//                game = new Game();
+//            } else {
+                gameUpdate();
+//            }
+        });
 
         // LOBBY STUFF
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,38 +84,49 @@ public class GameLauncher {
 
         server.addEventListener("createGame", RequestObject.class, (client, data, ackSender) -> {
             boolean success = true;
+            String msg = null;
             JSONObject createResponse = new JSONObject();
             if (data.getNickname() != null && !"".equals(data.getNickname().trim())) {
                 if (data.getTeamColors() != null && data.getTeamColors().size() >= 2) {
-                    // Agrego al jugador que creo el juego
-                    game.addPlayer(new Player(client, data.getNickname()));
+                    if (data.getWordsPacksSelected() != null && !data.getWordsPacksSelected().isEmpty()) {
+                        if (validateWords(data.getBoardSize(), data.getTeamColors().size(), data.getWordsByTeam())) {
+                            // Agrego al jugador que creo el juego
+                            game.addPlayer(new Player(client, data.getNickname()));
 
-                    // Creo los teams
-                    ArrayList<Team> teams = new ArrayList<>();
-                    for (String teamColor : data.getTeamColors()) {
-                        teams.add(new Team(teamColor, coloursMap.get(teamColor)));
+                            // Creo los teams
+                            ArrayList<Team> teams = new ArrayList<>();
+                            for (String teamColor : data.getTeamColors()) {
+                                teams.add(new Team(teamColor, coloursMap.get(teamColor)));
+                            }
+
+                            ArrayList<String> words = new ArrayList<>();
+                            for (String wordPack : data.getWordsPacksSelected()) {
+                                words.addAll(wordsFilesMap.get(wordPack));
+                            }
+
+                            // Inicializo el juego
+                            game.initGame(teams, data.getBoardSize(), data.getWordsByTeam(), words, data.getTurnDuration(), server);
+
+                            createResponse.put("game", new JSONObject(game).toString());
+                        } else {
+                            success = false;
+                            msg = "Hay mas palabras que espacios en el tablero. O me agrandas el tablero o me bajas la cantidad de palabras por equipo";
+                        }
+                    } else {
+                        success = false;
+                        msg = "Poneme 1 pack de palabras! Sino no puedo prepararte el juego";
                     }
-
-                    ArrayList<String> words = new ArrayList<>();
-                    for (String wordPack : data.getWordsPacksSelected()) {
-                        words.addAll(wordsFilesMap.get(wordPack));
-                    }
-
-                    // Inicializo el juego
-                    game.initGame(teams, data.getBoardSize(), data.getWordsByTeam(), words, data.getTurnDuration(), server);
-
-                    createResponse.put("game", new JSONObject(game).toString());
-                    createResponse.put("success", success);
                 } else {
                     success = false;
-                    createResponse.put("success", success);
-                    createResponse.put("msg", "Poneme 2 colores de equipos! O pensas jugar solari?");
+                    msg = "Poneme 2 colores de equipos! O pensas jugar solari?";
                 }
             } else {
                 success = false;
-                createResponse.put("success", success);
-                createResponse.put("msg", "Te olvidaste de tu apodo!");
+                msg = "Te olvidaste de tu apodo!";
             }
+
+            createResponse.put("success", success);
+            createResponse.put("msg", msg);
 
             client.sendEvent("createResponse", createResponse.toString());
             if (success) gameUpdate();
@@ -113,11 +136,6 @@ public class GameLauncher {
             JSONObject joinResponse = addPlayer(client, data.getNickname());
             joinResponse.put("game", new JSONObject(game).toString());
             client.sendEvent("joinResponse", joinResponse.toString());
-            gameUpdate();
-        });
-
-        server.addDisconnectListener(client -> {
-            game.removePlayer(client);
             gameUpdate();
         });
 
@@ -192,6 +210,11 @@ public class GameLauncher {
         });
 
         server.start();
+    }
+
+    private boolean validateWords(int boardSize, int teams, int wordsByTeam) {
+        int maxWords = boardSize * boardSize;
+        return ((wordsByTeam * teams) + 1) < maxWords - 1;
     }
 
     public JSONObject addPlayer(SocketIOClient client, String nickname) {
