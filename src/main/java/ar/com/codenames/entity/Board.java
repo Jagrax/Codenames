@@ -1,4 +1,4 @@
-package ar.com.codemanes.entity;
+package ar.com.codenames.entity;
 
 import java.util.Arrays;
 

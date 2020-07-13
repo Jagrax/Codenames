@@ -1,8 +1,8 @@
-package ar.com.codemanes;
+package ar.com.codenames;
 
-import ar.com.codemanes.entity.Game;
-import ar.com.codemanes.entity.Player;
-import ar.com.codemanes.entity.Team;
+import ar.com.codenames.entity.Game;
+import ar.com.codenames.entity.Player;
+import ar.com.codenames.entity.Team;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
@@ -35,7 +35,7 @@ public class GameLauncher {
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     private final SocketIOServer server;
     private final Map<String, Set<String>> wordsFilesMap = new HashMap<>();
-    private Game game = new Game();
+    private final Game game = new Game();
 
     public GameLauncher(String hostName, int port, String wordsFilesFolderPath) {
         try {
@@ -278,6 +278,7 @@ public class GameLauncher {
     }
 
     public Set<String> listFilesUsingDirectoryStream(String dir) throws IOException {
+        log.info(String.valueOf(getClass().getClassLoader().getResources("words")));
         Set<String> fileList = new HashSet<>();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(dir))) {
             for (Path path : stream) {

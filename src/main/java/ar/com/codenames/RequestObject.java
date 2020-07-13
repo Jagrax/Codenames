@@ -1,6 +1,6 @@
-package ar.com.codemanes;
+package ar.com.codenames;
 
-import ar.com.codemanes.entity.Player;
+import ar.com.codenames.entity.Player;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package ar.com.codemanes.entity;
+package ar.com.codenames.entity;
 
 import com.corundumstudio.socketio.SocketIOClient;
 
