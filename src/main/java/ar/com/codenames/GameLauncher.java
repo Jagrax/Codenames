@@ -4,7 +4,6 @@ import ar.com.codenames.entity.Game;
 import ar.com.codenames.entity.Player;
 import ar.com.codenames.entity.Team;
 import com.corundumstudio.socketio.Configuration;
-import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -13,11 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,6 +20,8 @@ import java.util.stream.Stream;
 public class GameLauncher {
 
     private final static Logger log = LoggerFactory.getLogger(GameLauncher.class);
+
+    private final static String FOLDER_WORDS = "words";
 
     private final Map<String, String> coloursMap = Stream.of(
             new AbstractMap.SimpleEntry<>("Rojo", "danger"),
@@ -37,22 +34,22 @@ public class GameLauncher {
     private final Map<String, Set<String>> wordsFilesMap = new HashMap<>();
     private final Game game = new Game();
 
-    public GameLauncher(String hostName, int port, String wordsFilesFolderPath) {
+    public GameLauncher(String hostName, int port) {
         try {
-            for (String wordFile : listFilesUsingDirectoryStream(wordsFilesFolderPath)) {
+            for (File wordsFile : getWordsFiles()) {
                 Set<String> wordsInFile = new HashSet<>();
-                File file = new File(wordFile);
-                FileReader fileReader = new FileReader(file);
+                FileReader fileReader = new FileReader(wordsFile);
                 BufferedReader reader = new BufferedReader(fileReader);
                 String line;
                 while ((line = reader.readLine()) != null) {
                     if (!line.trim().equals("")) wordsInFile.add(line.trim());
                 }
-                String packName = file.getName().substring(0, file.getName().lastIndexOf(".")).toUpperCase();
+                String packName = wordsFile.getName().substring(0, wordsFile.getName().lastIndexOf(".")).toUpperCase();
                 wordsFilesMap.put(packName, wordsInFile);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error("Se produjo un error al inicializar los packs de palabras", e);
+            System.exit(-1);
         }
 
         Configuration configuration = new Configuration();
@@ -65,11 +62,7 @@ public class GameLauncher {
 
         server.addDisconnectListener(client -> {
             game.removePlayer(client);
-//            if (game.getPlayers().isEmpty()) {
-//                game = new Game();
-//            } else {
-                gameUpdate();
-//            }
+            gameUpdate();
         });
 
         // LOBBY STUFF
@@ -133,10 +126,26 @@ public class GameLauncher {
         });
 
         server.addEventListener("joinGame", RequestObject.class, (client, data, ackSender) -> {
-            JSONObject joinResponse = addPlayer(client, data.getNickname());
+            boolean success = true;
+            String msg = null;
+            String nickname = data.getNickname();
+            if (nickname != null && !"".equals(nickname.trim())) {
+                if (game.getPlayers().stream().anyMatch(playerInRoom -> playerInRoom.getNickname().equalsIgnoreCase(nickname.trim()))) {
+                    success = false;
+                    msg = "Ya hay un jugador con ese nickname";
+                } else {
+                    game.addPlayer(new Player(client, nickname));
+                }
+            } else {
+                success = false;
+                msg = "Nickname is null or empty";
+            }
+            JSONObject joinResponse = new JSONObject();
+            joinResponse.put("success", success);
+            joinResponse.put("msg", msg);
             joinResponse.put("game", new JSONObject(game).toString());
             client.sendEvent("joinResponse", joinResponse.toString());
-            gameUpdate();
+            if (success) gameUpdate();
         });
 
         // GAME STUFF
@@ -212,32 +221,31 @@ public class GameLauncher {
         server.start();
     }
 
+    private void gameUpdate() {
+        JSONObject gameStateResponse = new JSONObject();
+        gameStateResponse.put("success", true);
+        gameStateResponse.put("game", new JSONObject(game).toString());
+        server.getBroadcastOperations().sendEvent("gameState", gameStateResponse.toString());
+    }
+
     private boolean validateWords(int boardSize, int teams, int wordsByTeam) {
         int maxWords = boardSize * boardSize;
         return ((wordsByTeam * teams) + 1) < maxWords - 1;
     }
 
-    public JSONObject addPlayer(SocketIOClient client, String nickname) {
-        JSONObject addPlayerResult = new JSONObject();
-        if (nickname != null && !"".equals(nickname.trim())) {
-            if (game.getPlayers().stream().anyMatch(playerInRoom -> playerInRoom.getNickname().equalsIgnoreCase(nickname.trim()))) {
-                addPlayerResult.put("success", false);
-                addPlayerResult.put("msg", "Ya hay un jugador con ese nickname");
-            } else {
-                addPlayerResult.put("success", true);
-                game.addPlayer(new Player(client, nickname));
-            }
-        } else {
-            addPlayerResult.put("success", false);
-            addPlayerResult.put("msg", "Nickname is null or empty");
+    private static File[] getWordsFiles() throws Exception {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        URL url = loader.getResource(FOLDER_WORDS);
+        if (url == null) {
+            throw new Exception("No se encontro el directorio 'words' dentro de la carpeta resources.");
         }
-        return addPlayerResult;
+        String path = url.getPath();
+        return new File(path).listFiles();
     }
 
     public static void main(String[] args) {
         String hostName = null;
         Integer port = null;
-        String wordsFilesFolderPath = null;
         if (args != null && args.length > 0) {
             for (int n = 0; n < args.length; n++) {
                 // Es un comando
@@ -248,9 +256,6 @@ public class GameLauncher {
                             break;
                         case "port":
                             port = Integer.parseInt(args[++n]);
-                            break;
-                        case "wordsFilesFolderPath":
-                            wordsFilesFolderPath = args[++n];
                             break;
                         default:
                             System.exit(-1);
@@ -269,31 +274,6 @@ public class GameLauncher {
             System.exit(-1);
         }
 
-        if (wordsFilesFolderPath == null) {
-            System.err.println("No se difinio el 'wordsFilesFolderPath'. Para hacerlo pasar como parametro: -wordsFilesFolderPath C:/Users/Jagrax/Desktop/words/");
-            System.exit(-1);
-        }
-
-        new GameLauncher(hostName, port, wordsFilesFolderPath);
-    }
-
-    public Set<String> listFilesUsingDirectoryStream(String dir) throws IOException {
-        log.info(String.valueOf(getClass().getClassLoader().getResources("words")));
-        Set<String> fileList = new HashSet<>();
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(dir))) {
-            for (Path path : stream) {
-                if (!Files.isDirectory(path)) {
-                    fileList.add(path.toString());
-                }
-            }
-        }
-        return fileList;
-    }
-
-    private void gameUpdate() {
-        JSONObject gameStateResponse = new JSONObject();
-        gameStateResponse.put("success", true);
-        gameStateResponse.put("game", new JSONObject(game).toString());
-        server.getBroadcastOperations().sendEvent("gameState", gameStateResponse.toString());
+        new GameLauncher(hostName, port);
     }
 }

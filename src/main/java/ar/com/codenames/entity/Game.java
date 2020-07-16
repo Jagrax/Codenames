@@ -31,12 +31,7 @@ public class Game {
      */
     public int timerAmount;
 
-    /**
-     * TODO - ELIMINAR
-     */
-    public Team turn;
     public Integer turnId;
-    public ArrayList<Team> winner = new ArrayList<>();
     public ArrayList<Integer> winnerId = new ArrayList<>();
     boolean over;
     private Timer turnTimer;
@@ -73,20 +68,19 @@ public class Game {
             if (tile.isDeath()) {
                 over = true;
                 turnTimer.cancel();
-                for (Team team : teams.values()) {
-                    if (!team.equals(turn)) {
-                        winner.add(team);
+                for (Integer teamId : teams.keySet()) {
+                    if (!teamId.equals(turnId)) {
+                        winnerId.add(teamId);
                     }
                 }
             } else {
                 // Find the team of tile
-                Team tileFlippedTeam = tile.getTeam();
-
-                for (Team team : teams.values()) if (team.equals(tileFlippedTeam)) team.setPendingTiles(team.getPendingTiles() - 1);
+                Team tileFlippedTeam = teams.get(tile.getTeamId());
+                tileFlippedTeam.setPendingTiles(tileFlippedTeam.getPendingTiles() - 1);
 
                 if (tile.isNeutral()) {
                     switchTurn(); // Switch turn if neutral was flipped
-                } else if (!tileFlippedTeam.equals(turn)) {
+                } else if (!tile.getTeamId().equals(turnId)) {
                     switchTurn(); // Switch turn if opposite teams tile was flipped
                 }
             }
@@ -101,13 +95,12 @@ public class Game {
     public void switchTurn() {
         // Reset timer
         timer = timerAmount + 1;
-        int nextTeamId = getId(teams, turn) + 1;
+        int nextTeamId = turnId + 1;
         if (nextTeamId >= teams.size()) {
             nextTeamId = 0;
         }
 
         // Swith turn
-        turn = teams.get(nextTeamId);
         turnId = nextTeamId;
     }
 
@@ -165,14 +158,6 @@ public class Game {
         return timerAmount;
     }
 
-    public Team getTurn() {
-        return turn;
-    }
-
-    public ArrayList<Team> getWinner() {
-        return winner;
-    }
-
     public boolean isOver() {
         return over;
     }
@@ -183,13 +168,6 @@ public class Game {
 
     public Timer getTurnTimer() {
         return turnTimer;
-    }
-
-    public <K, V> K getId(Map<K, V> map, V value) {
-        return map.keySet()
-                .stream()
-                .filter(key -> value.equals(map.get(key)))
-                .findFirst().get();
     }
 
     public void setTeams(Map<Integer, Team> teams) {
@@ -220,20 +198,12 @@ public class Game {
         this.timerAmount = timerAmount;
     }
 
-    public void setTurn(Team turn) {
-        this.turn = turn;
-    }
-
     public Integer getTurnId() {
         return turnId;
     }
 
     public void setTurnId(Integer turnId) {
         this.turnId = turnId;
-    }
-
-    public void setWinner(ArrayList<Team> winner) {
-        this.winner = winner;
     }
 
     public ArrayList<Integer> getWinnerId() {
@@ -283,7 +253,6 @@ public class Game {
         // Determino que equipo comienza
         randomTurn();
         this.over = false;
-        this.winner = new ArrayList<>();
         this.winnerId = new ArrayList<>();
         // Inicializo el timer de la UI
         timer = timerAmount;
@@ -388,7 +357,6 @@ public class Game {
         for (int teamId = 0; teamId < teams.size(); teamId++) {
             if (countPendingTiles(teamId) == 0) {
                 over = true;
-                winner.add(teams.get(teamId));
                 winnerId.add(teamId);
                 turnTimer.cancel();
             }
@@ -402,7 +370,6 @@ public class Game {
         int teamId = new Random().nextInt(teams.size());
         for (Integer teamIndex : teams.keySet()) {
             if (teamIndex.equals(teamId)) {
-                turn = teams.get(teamIndex);
                 turnId = teamIndex;
                 break;
             }
@@ -448,6 +415,46 @@ public class Game {
      * TODO
      */
     public void randomizeTeams() {
+        /*
+        Map<Integer, Integer> playersByTeam = new HashMap<>();
+        for (Integer teamId : teams.keySet()) {
+            playersByTeam.put(teamId, 0);
+        }
+
+        int menorCantidadDeJugadoresEnUnEquipo = 0;
+        int mayorCantidadDeJugadoresEnUnEquipo = 0;
+
+        Random r = new Random();
+        for (Player player : getPlayers()) {
+            int newTeamId = r.nextInt(teams.size());
+            Integer playersInTeam = playersByTeam.get(newTeamId);
+            if (playersInTeam == 0) {
+                playersInTeam++;
+                player.setTeamId(newTeamId);
+            } else {
+
+            }
+
+            // Miro todos los equipos y cuentos sus jugadores para reasignarlos parejo
+            for (Integer teamId : playersByTeam.keySet()) {
+                Integer actualPlayersInTeam = playersByTeam.get(teamId);
+                if (actualPlayersInTeam > mayorCantidadDeJugadoresEnUnEquipo) {
+                    mayorCantidadDeJugadoresEnUnEquipo = actualPlayersInTeam;
+                }
+            }
+        }
+
+
+
+
+        ArrayList<Player> players = getPlayers();
+        ArrayList<Player> placed = new ArrayList<>();
+
+        while (placed.size() < players.size()) {
+            Player randomPlayer = players.get(r.nextInt(players.size()));
+            if (!placed.contains(randomPlayer)) placed.add(randomPlayer);
+        }
+*/
         /*
         let color = 0;    // Get a starting color
         if (Math.random() < 0.5) color = 1
