@@ -90,6 +90,20 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.heroku.sdk</groupId>
+                <artifactId>heroku-maven-plugin</artifactId>
+                <version>3.0.3</version>
+                <configuration>
+                    <processTypes>
+                        <web>java $JAVA_OPTS -Dhttp.port=9093 -cp target/classes:target/dependency/* ar.com.codenames.GameLauncher -hostName 0.0.0.0 -port 9093</web>
+                    </processTypes>
+                    <includeTarget>false</includeTarget>
+                    <includes>
+                        <include>target/codenames-1.0.jar</include>
+                    </includes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

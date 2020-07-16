@@ -1,4 +1,4 @@
-const socket = io('http://192.168.0.13:9093'); // Connect to server
+const socket = io('pacific-badlands-39971.herokuapp.com:9093'); // Connect to server
 
 let mainCarousel = $('.carousel');
 let myTeamId;

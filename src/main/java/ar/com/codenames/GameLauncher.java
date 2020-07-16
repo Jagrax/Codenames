@@ -35,6 +35,7 @@ public class GameLauncher {
     private final Game game = new Game();
 
     public GameLauncher(String hostName, int port) {
+        log.info("Inicializando GameLauncher");
         try {
             for (File wordsFile : getWordsFiles()) {
                 Set<String> wordsInFile = new HashSet<>();
@@ -219,6 +220,7 @@ public class GameLauncher {
         });
 
         server.start();
+        log.info("Juego inicializado correctamente");
     }
 
     private void gameUpdate() {
