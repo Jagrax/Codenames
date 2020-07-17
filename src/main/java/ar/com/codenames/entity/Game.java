@@ -127,6 +127,7 @@ public class Game {
 
     public void addPlayer(Player player) {
         player.setTeamId(0);// Lo mando al team 0 y que se acomode manualmente
+        player.setRole(Player.Role.GUESSER);
         players.add(player);
     }
 

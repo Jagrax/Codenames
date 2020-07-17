@@ -12,6 +12,7 @@
     <properties>
         <main.class>ar.com.codenames.GameLauncher</main.class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <port>5000</port>
     </properties>
 
     <developers>
@@ -96,12 +97,8 @@
                 <version>3.0.3</version>
                 <configuration>
                     <processTypes>
-                        <web>java $JAVA_OPTS -Dhttp.port=9093 -cp target/classes:target/dependency/* ar.com.codenames.GameLauncher -hostName 0.0.0.0 -port 9093</web>
+                        <web>java $JAVA_OPTS -Dserver.port=$PORT -Dhttp.port=$PORT -cp target/classes:target/dependency/* ar.com.codenames.GameLauncher -port $PORT</web>
                     </processTypes>
-                    <includeTarget>false</includeTarget>
-                    <includes>
-                        <include>target/codenames-1.0.jar</include>
-                    </includes>
                 </configuration>
             </plugin>
         </plugins>

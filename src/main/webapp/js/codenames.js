@@ -1,4 +1,4 @@
-const socket = io('pacific-badlands-39971.herokuapp.com:9093'); // Connect to server
+const socket = io('http://pacific-badlands-39971.herokuapp.com'); // Connect to server
 
 let mainCarousel = $('.carousel');
 let myTeamId;
@@ -270,12 +270,12 @@ function updateInfo(game, team) {
     // Update the turn msg or display winner(s)
     turnMessage.removeClass();
     if (game.over) {
-        turnMessage.text('Ganó el equipo ' + game.winner[0].name + '!');
-        turnMessage.addClass('text-' + game.winner[0].color);
+        turnMessage.text('Ganó el equipo ' + game.teams[game.winnerId].name + '!');
+        turnMessage.addClass('text-' + game.teams[game.winnerId].color);
         timer.text("");
     } else {
-        turnMessage.text('Turno del ' + game.turn.name);
-        turnMessage.addClass('text-' + game.turn.color);
+        turnMessage.text('Turno del ' + game.teams[game.turnId].name);
+        turnMessage.addClass('text-' + game.teams[game.turnId].color);
     }
 
     // Disable end turn button for opposite team or spymaster

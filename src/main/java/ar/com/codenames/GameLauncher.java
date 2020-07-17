@@ -153,31 +153,26 @@ public class GameLauncher {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Join Team. Se llama cuando un jugador hace click en el boton de 'Cambiar de equipo a (red, blue, green, yellow, cyan)'
-        server.addEventListener("joinTeam", RequestObject.class, ((client, data, ackSender) -> {
-            boolean playerChanged = false;
+        server.addEventListener("joinTeam", RequestObject.class, (client, data, ackSender) -> {
             Player player = game.getPlayer(client);
             if (!player.getTeamId().equals(data.getTeamId())) {
                 // Si el equipo al que quiere ir no es en el que ya esta, procedo a moverlo
                 player.setTeamId(data.getTeamId());
-                playerChanged = true;
-            }
-
-            // Solo si lo movi de equipo aviso a todos los jugadores que hubo un cambio
-            if (playerChanged) {
                 // Le envio al jugador que se cambio, su nuevo teamId
                 client.sendEvent("newTeamAssigned", game.getPlayer(client).getTeamId());
+                // Solo si lo movi de equipo aviso a todos los jugadores que hubo un cambio
                 gameUpdate();
             }
-        }));
+        });
 
         // Randomize Team. Se llama cuando un jugador hace click en el boton de 'Aleatorizar equipos'
-        server.addEventListener("randomizeTeams", RequestObject.class, ((client, data, ackSender) -> {
+        server.addEventListener("randomizeTeams", RequestObject.class, (client, data, ackSender) -> {
             game.randomizeTeams();
             gameUpdate();
-        }));
+        });
 
         // New Game. Se llama cuando un jugador hace click en el boton 'Nueva partida'
-        server.addEventListener("newGame", RequestObject.class, ((client, data, ackSender) -> {
+        server.addEventListener("newGame", RequestObject.class, (client, data, ackSender) -> {
             // Inicializo una nueva partida
             game.newBoard();
             // Establezco a todos los jugadores como 'Adivinos' (guessers)
@@ -186,10 +181,10 @@ public class GameLauncher {
             server.getBroadcastOperations().sendEvent("switchRoleResponse", new JSONObject().put("success", true).put("role", Player.Role.GUESSER).toString());
             server.getBroadcastOperations().sendEvent("newGameResponse", new JSONObject().put("success", true).toString());
             gameUpdate();
-        }));
+        });
 
         // Switch role. Se llama cuando el jugador hace click en el toogle de Spymaster
-        server.addEventListener("switchRole", RequestObject.class, ((client, data, ackSender) -> {
+        server.addEventListener("switchRole", RequestObject.class, (client, data, ackSender) -> {
             Player player = game.getPlayer(client);
             if (player != null) {
                 player.setRole(data.getRole());
@@ -198,13 +193,13 @@ public class GameLauncher {
             } else {
                 log.error("Se intento cambiar el rol de un jugador que no se encuentra en el juego");
             }
-        }));
+        });
 
         // End Turn. Se llama cuando un jugador hace click en 'Finalizar turno'
-        server.addEventListener("endTurn", RequestObject.class, ((client, data, ackSender) -> {
+        server.addEventListener("endTurn", RequestObject.class, (client, data, ackSender) -> {
             game.switchTurn();
             gameUpdate();
-        }));
+        });
 
         server.addEventListener("clickTile", RequestObject.class, (client, data, ackSender) -> {
             Player player = game.getPlayer(client);
@@ -267,13 +262,13 @@ public class GameLauncher {
         }
 
         if (hostName == null) {
-            System.err.println("No se difinio el 'hostName'. Para hacerlo pasar como parametro: -hostName 192.168.0.13");
-            System.exit(-1);
+            System.out.println("No se difinio el 'hostName' como parametro, se utiliza el default '0.0.0.0'. Ejemplo para definirlo: -hostName 192.168.0.13");
+            hostName = "0.0.0.0";
         }
 
         if (port == null) {
             System.err.println("No se difinio el 'port'. Para hacerlo pasar como parametro: -port 9093");
-            System.exit(-1);
+            port = Integer.valueOf(System.getenv("PORT"));
         }
 
         new GameLauncher(hostName, port);
