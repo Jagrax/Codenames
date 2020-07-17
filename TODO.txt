@@ -1,0 +1,8 @@
++------------+----------+---------------------------------------------------------------------------------------------------------+-----------+
+|    DATE    |  STATUS  |                                                 DETAILS                                                 |  VERSION  |
++------------+----------+---------------------------------------------------------------------------------------------------------+-----------+
+| 16/07/2020 | PENDING  | Al iniciar un nuevo juego, a veces el timer se muere                                                    | 1.0-BETA  |
+| 16/07/2020 | DONE     | A nivel CSS, no diferencian bien los colores siendo Spymaster cuando una palabra fue tocada y cuando no | 1.0-BETA  |
+| 16/07/2020 | DONE     | Cuando un jugador toca una palabra cualquiera, al Spymaster no se le actualiza el color de la palabra   | 1.0-BETA  |
+| 16/07/2020 | DONE     | Cuando un jugador toca una palabra neutral, no finaliza su turno                                        | 1.0-BETA  |
++------------+----------+---------------------------------------------------------------------------------------------------------+-----------+

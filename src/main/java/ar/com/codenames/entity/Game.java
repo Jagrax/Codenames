@@ -73,14 +73,14 @@ public class Game {
                         winnerId.add(teamId);
                     }
                 }
+            } else if (tile.isNeutral()) {
+                switchTurn(); // Switch turn if neutral was flipped
             } else {
                 // Find the team of tile
                 Team tileFlippedTeam = teams.get(tile.getTeamId());
                 tileFlippedTeam.setPendingTiles(tileFlippedTeam.getPendingTiles() - 1);
 
-                if (tile.isNeutral()) {
-                    switchTurn(); // Switch turn if neutral was flipped
-                } else if (!tile.getTeamId().equals(turnId)) {
+                if (!tile.getTeamId().equals(turnId)) {
                     switchTurn(); // Switch turn if opposite teams tile was flipped
                 }
             }

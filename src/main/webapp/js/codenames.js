@@ -304,6 +304,9 @@ function updateBoard(board, teams) {
                 // Unflipped tile mark
                 if (!board.tiles[x][y].flipped) {
                     button.addClass('unflipped');
+                } else {
+                    button.addClass('font-weight-bold');
+                    button.removeClass('unflipped');
                 }
             }
         }
