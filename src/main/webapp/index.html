@@ -29,7 +29,7 @@
         </div>
 
         <div class="page-wrapper"> 
-            <h4>CODENAMES V1.1-BETA</h4>
+            <h4>CODENAMES V1.2-BETA</h4>
             <div id="main-carousel" class="carousel slide" style="display: none">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
@@ -40,12 +40,13 @@
                                     <div class="col-3">
                                         <input id="join-nickname" type="text" class="form-control form-control-sm"/>
                                     </div>
-                                    <label for="boardSize" class="col-3 col-form-label col-form-label-sm">Tamaño del tablero</label>
-                                    <div class="col-3">
+                                    <div class="col-6"><button type="button" class="btn btn-sm btn-block btn-success" id="join-enter">Unirse a partida</button></div>
+                                    <label for="boardSize" class="col-3 col-form-label col-form-label-sm" config-field>Tamaño del tablero</label>
+                                    <div class="col-3" config-field>
                                         <input id="boardSize" type="number" min="3" max="6" class="form-control form-control-sm" value="5"/>
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="form-group row" config-field>
                                     <label for="turnDuration" class="col-3 col-form-label col-form-label-sm">Duración de cada turno</label>
                                     <div class="col-3">
                                         <input id="turnDuration" type="number" min="30" max="240" class="form-control form-control-sm" value="60"/>
@@ -55,7 +56,7 @@
                                         <input id="wordsByTeam" type="number" min="1" max="36" class="form-control form-control-sm" value="8"/>
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="row" config-field>
                                     <div class="col-6">
                                         <div class="form-group row">
                                             <label for="team-1-color" class="col-6 col-form-label col-form-label-sm">Equipo #1</label>
@@ -107,19 +108,6 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label for="team-5-color" class="col-6 col-form-label col-form-label-sm">Equipo #5</label>
-                                            <div class="col-6">
-                                                <select id="team-5-color" class="form-control form-control-sm">
-                                                    <option selected></option>
-                                                    <option>Rojo</option>
-                                                    <option>Azul</option>
-                                                    <option>Verde</option>
-                                                    <option>Amarillo</option>
-                                                    <option>Cyan</option>
-                                                </select>
-                                            </div>
-                                        </div>
                                     </div>
 
                                     <div class="col-6">
@@ -127,13 +115,23 @@
                                         <select multiple class="form-control form-control-sm" id="words-packs"></select>
                                     </div>
                                 </div>
-                                <div class="form-group row"><div class="col-12 text-center text-danger" id="error-message"></div></div>
-                                <div class="row">
-                                    <div class="col-12 text-center">
-                                        <button type="button" class="btn btn-sm btn-success" id="join-create" style="display: none" disabled>Crear partida</button>
-                                        <button type="button" class="btn btn-sm btn-success" id="join-enter" style="display: none" disabled>Unirse a partida</button>
+                                <div class="row" config-field>
+                                    <label for="team-5-color" class="col-3 col-form-label col-form-label-sm">Equipo #5</label>
+                                    <div class="col-3">
+                                        <select id="team-5-color" class="form-control form-control-sm">
+                                            <option selected></option>
+                                            <option>Rojo</option>
+                                            <option>Azul</option>
+                                            <option>Verde</option>
+                                            <option>Amarillo</option>
+                                            <option>Cyan</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-success" id="join-create" style="display: none" disabled>Crear partida</button>
                                     </div>
                                 </div>
+                                <div class="row"><div class="col-12 text-center text-danger mt-3" id="error-message" style="display:none"></div></div>
                             </div>
                         </div>
                     </div>
@@ -141,14 +139,19 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-12 col-xl-4">
-                                    <div class="bg-white rounded p-1">
-                                        <h6 class="text-center">Jugadores</h6>
-                                        <div id="teams-tables" class="row no-gutters"></div>
-                                        <button class="btn btn-block btn-secondary" type="button" id="randomize-teams">Aleatorizar equipos</button>
+                                    <div class="row">
+                                        <div class="col-5 col-xl-12 font-size-big mb-2-half"><button id="leave-game" type="button" class="btn btn-outline-light">Salir</button></div>
+                                        <div class="col-7 col-xl-12">
+                                            <div class="bg-white rounded p-1">
+                                                <h6 class="text-center">Jugadores</h6>
+                                                <div id="teams-tables" class="row no-gutters"></div>
+                                                <button class="btn btn-block btn-secondary" type="button" id="randomize-teams">Aleatorizar equipos</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-xl-8">
-                                    <div class="row info-row">
+                                    <div class="row font-size-big px-2-half">
                                         <div id="info" class="col-4">
                                             <span id="score-team-0" style="display:none"></span>
                                             <span id="score-team-1-sep" class="text-white" style="display:none">-</span>
@@ -164,7 +167,7 @@
                                         <div class="col-4 text-right"><button id="end-turn" type="button" class="btn btn-outline-light">Finalizar turno</button></div>
                                     </div>
                                     <div id="game-board"></div>
-                                    <div class="row info-row">
+                                    <div class="row font-size-big px-2-half">
                                         <div class="col">
                                             <div class="custom-control custom-switch custom-switch-lg">
                                                 <input type="checkbox" class="custom-control-input" id="role-spymaster">

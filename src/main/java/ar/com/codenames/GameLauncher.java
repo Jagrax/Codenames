@@ -9,19 +9,15 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.net.URL;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GameLauncher {
 
     private final static Logger log = LoggerFactory.getLogger(GameLauncher.class);
-
-    private final static String FOLDER_WORDS = "words";
 
     private final Map<String, String> coloursMap = Stream.of(
             new AbstractMap.SimpleEntry<>("Rojo", "danger"),
@@ -31,27 +27,10 @@ public class GameLauncher {
             new AbstractMap.SimpleEntry<>("Cyan", "info"))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     private final SocketIOServer server;
-    private final Map<String, Set<String>> wordsFilesMap = new HashMap<>();
     private final Game game = new Game();
 
     public GameLauncher(String hostName, int port) {
         log.info("Inicializando GameLauncher");
-        try {
-            for (File wordsFile : getWordsFiles()) {
-                Set<String> wordsInFile = new HashSet<>();
-                FileReader fileReader = new FileReader(wordsFile);
-                BufferedReader reader = new BufferedReader(fileReader);
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (!line.trim().equals("")) wordsInFile.add(line.trim());
-                }
-                String packName = wordsFile.getName().substring(0, wordsFile.getName().lastIndexOf(".")).toUpperCase();
-                wordsFilesMap.put(packName, wordsInFile);
-            }
-        } catch (Exception e) {
-            log.error("Se produjo un error al inicializar los packs de palabras", e);
-            System.exit(-1);
-        }
 
         Configuration configuration = new Configuration();
         configuration.setHostname(hostName);
@@ -63,7 +42,10 @@ public class GameLauncher {
 
         server.addDisconnectListener(client -> {
             game.removePlayer(client);
-            gameUpdate();
+            if (!game.getPlayers().isEmpty()) {
+                gameUpdate();
+            }
+            server.getBroadcastOperations().sendEvent("gameCreatedResponse", new JSONObject().put("gameCreated", !game.getPlayers().isEmpty()).toString());
         });
 
         // LOBBY STUFF
@@ -72,7 +54,7 @@ public class GameLauncher {
         server.addEventListener("isGameCreated", RequestObject.class, (client, data, ackSender) -> {
             JSONObject gameCreatedResponse = new JSONObject();
             gameCreatedResponse.put("gameCreated", !game.getPlayers().isEmpty());
-            gameCreatedResponse.put("wordPacks", wordsFilesMap.keySet());
+            gameCreatedResponse.put("wordPacks", game.getWordsFilesMap().keySet());
             client.sendEvent("gameCreatedResponse", gameCreatedResponse.toString());
         });
 
@@ -95,7 +77,7 @@ public class GameLauncher {
 
                             ArrayList<String> words = new ArrayList<>();
                             for (String wordPack : data.getWordsPacksSelected()) {
-                                words.addAll(wordsFilesMap.get(wordPack));
+                                words.addAll(game.getWordsFilesMap().get(wordPack));
                             }
 
                             // Inicializo el juego
@@ -123,7 +105,10 @@ public class GameLauncher {
             createResponse.put("msg", msg);
 
             client.sendEvent("createResponse", createResponse.toString());
-            if (success) gameUpdate();
+            if (success) {
+                server.getBroadcastOperations().sendEvent("gameCreatedResponse", new JSONObject().put("gameCreated", !game.getPlayers().isEmpty()).toString());
+                gameUpdate();
+            }
         });
 
         server.addEventListener("joinGame", RequestObject.class, (client, data, ackSender) -> {
@@ -147,6 +132,13 @@ public class GameLauncher {
             joinResponse.put("game", new JSONObject(game).toString());
             client.sendEvent("joinResponse", joinResponse.toString());
             if (success) gameUpdate();
+        });
+
+        server.addEventListener("leaveRoom", RequestObject.class, (client, data, ackSender) -> {
+            game.removePlayer(client);
+            gameUpdate();
+            client.sendEvent("leaveResponse", new JSONObject().put("success", true).toString());
+            server.getBroadcastOperations().sendEvent("gameCreatedResponse", new JSONObject().put("gameCreated", !game.getPlayers().isEmpty()).toString());
         });
 
         // GAME STUFF
@@ -228,16 +220,6 @@ public class GameLauncher {
     private boolean validateWords(int boardSize, int teams, int wordsByTeam) {
         int maxWords = boardSize * boardSize;
         return ((wordsByTeam * teams) + 1) < maxWords - 1;
-    }
-
-    private static File[] getWordsFiles() throws Exception {
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        URL url = loader.getResource(FOLDER_WORDS);
-        if (url == null) {
-            throw new Exception("No se encontro el directorio 'words' dentro de la carpeta resources.");
-        }
-        String path = url.getPath();
-        return new File(path).listFiles();
     }
 
     public static void main(String[] args) {

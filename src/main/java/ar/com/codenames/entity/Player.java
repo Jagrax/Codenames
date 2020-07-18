@@ -16,6 +16,7 @@ public class Player {
     public Player(SocketIOClient client, String nickname) {
         this.id = client.getSessionId().toString();
         this.nickname = nickname;
+        this.role = Role.GUESSER;
     }
 
     public String getId() {

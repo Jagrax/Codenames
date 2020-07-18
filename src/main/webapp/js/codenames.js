@@ -7,6 +7,7 @@ let myTeamId;
 ////////////////////////////////////////////////////////////////////////////
 // Divs
 let joinErrorMessage = $('#error-message');
+let formFirstRow = $('.form-group.row').first();
 // Input Fields
 let nickname = $('#join-nickname');
 let boardSize = $('#boardSize');
@@ -21,6 +22,7 @@ let wordsPacks = $('#words-packs');
 // Buttons
 let joinGame = $('#join-enter');
 let joinCreate = $('#join-create');
+let leaveGame = $('#leave-game');
 
 // Game Page Elements
 ////////////////////////////////////////////////////////////////////////////
@@ -28,7 +30,7 @@ let joinCreate = $('#join-create');
 let gameBoard = $('#game-board');
 let teamsTables = $('#teams-tables');
 // Buttons
-let randomizeTeams = $('#randomizeTeams');
+let randomizeTeams = $('#randomize-teams');
 let endTurn = $('#end-turn');
 let newGame = $('#new-game');
 let switchRole = $('#role-spymaster');
@@ -61,23 +63,34 @@ socket.on('disconnect', function () {
     mainCarousel.carousel(0);
     gameBoard.empty();
     joinErrorMessage.text("");
+    joinErrorMessage.hide();
     output('The client has disconnected!');
 });
 
 socket.on('gameCreatedResponse', function (data) {
     data = JSON.parse(data);
-    wordsPacks.empty();
-    for (var n = 0; n < data.wordPacks.length; n++) {
-        $("<option/>", {html: data.wordPacks[n]}).appendTo(wordsPacks);
+    if (data.wordPacks) {
+        wordsPacks.empty();
+        for (var n = 0; n < data.wordPacks.length; n++) {
+            $("<option/>", {html: data.wordPacks[n]}).appendTo(wordsPacks);
+        }
     }
     joinCreate.prop("disabled", data.gameCreated);
     joinGame.prop("disabled", !data.gameCreated);
     if (data.gameCreated) {
-        joinGame.show();
+        joinGame.parent().show();
         joinCreate.hide();
+        $('[config-field]').each(function () {
+            $(this).hide();
+        });
+        formFirstRow.first().removeClass('form-group');
     } else {
-        joinGame.hide();
+        $('[config-field]').each(function () {
+            $(this).show();
+        });
+        joinGame.parent().hide();
         joinCreate.show();
+        formFirstRow.addClass('form-group');
     }
 });
 
@@ -86,6 +99,7 @@ socket.on('newTeamAssigned', function (newTeamId) {
 });
 
 function drawBoard(board) {
+    gameBoard.empty();
     var table = $('<table></table>').addClass("table table-borderless table-fixed");
     for (let x = 0; x < board.tiles.length; x++) {
         let tr = $("<tr></tr>").attr("id", "row-" + (x + 1));
@@ -129,7 +143,7 @@ joinCreate.on("click", function () {
 });
 
 // User Leaves Room
-joinCreate.on("click", function () {
+leaveGame.on("click", function () {
     socket.emit('leaveRoom', {});
 });
 
@@ -166,6 +180,7 @@ socket.on('joinResponse', function (data) {
         drawBoard(JSON.parse(data.game).board);
         mainCarousel.carousel(1);
     } else {
+        joinErrorMessage.show();
         joinErrorMessage.text(data.msg);
     }
 });
@@ -177,6 +192,7 @@ socket.on('createResponse', function (data) {
         drawBoard(JSON.parse(data.game).board);
         mainCarousel.carousel(1);
     } else {
+        joinErrorMessage.show();
         joinErrorMessage.text(data.msg);
     }
 });

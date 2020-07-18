@@ -18,6 +18,7 @@ body {
 }
 
 .page-bg {
+  /*background: radial-gradient(ellipse at bottom, #3669a5 0%, #232327 100%); CONFIG DE TOBI*/
   background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
   background-blend-mode: screen;
   background-size: cover;
@@ -127,12 +128,6 @@ h4 {
     border-color: rgb(211, 191, 175);
 }
 
-.info-row {
-    font-size: 1.75rem;
-    padding-left: .75rem;
-    padding-right: .75rem
-}
-
 .custom-switch-lg {
     padding-left: 4.5rem;
 }
@@ -194,4 +189,22 @@ h4 {
 
 .btn-info.unflipped {
     background-color: rgba(23, 162, 184, .5);
+}
+/* CONFIG DE TOBI
+.bg-white {
+    background-color: #e4e4e4 !important
+}
+ */
+
+.font-size-big {
+    font-size: 1.75rem;
+}
+
+.mb-2-half {
+    margin-bottom:.75rem
+}
+
+.px-2-half {
+    padding-left: .75rem;
+    padding-right: .75rem;
 }

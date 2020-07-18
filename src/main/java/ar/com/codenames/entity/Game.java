@@ -6,21 +6,41 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.net.URL;
 import java.util.*;
 
 public class Game {
 
     private final static Logger log = LoggerFactory.getLogger(Game.class);
 
-    public static Set<String> baseWords = new HashSet<>();
-    public static Set<String> fruitWords = new HashSet<>();
+    /**
+     * Mapa que asocia un Id a un Team
+     */
+    public Map<Integer, Team> teams;
 
-    public Map<Integer, Team> teams; // ID, TEAM
-
+    /**
+     * Jugadores en el juego
+     */
     public ArrayList<Player> players = new ArrayList<>();
+
+    /**
+     * Palabras a usar en la partida
+     */
     public ArrayList<String> words;
+
+    /**
+     * Tamaño de tablero. Es cuadrado, o sea que siempre se multiplica por si mismo. Ej.: 5x5, 6x6, 7x7
+     */
     private int boardSize;
+
+    /**
+     * Cantidad de palabras a descubrir por equipo
+     */
     private int wordsByTeam;
+
     /**
      * Contador que se muestra en la pagina
      */
@@ -31,103 +51,63 @@ public class Game {
      */
     public int timerAmount;
 
+    /**
+     * Id del equipo del turno actual
+     */
     public Integer turnId;
+
     public ArrayList<Integer> winnerId = new ArrayList<>();
+
+    /**
+     * Indica si la partida finalizo o no. Puede ser true si:
+     * - A un equipo no le quedan palabras por descubrir
+     * - Si un equipo toca la negra
+     */
     boolean over;
+
+    /**
+     * Timer de 1 min por turno
+     */
     private Timer turnTimer;
 
+    /**
+     * Tabler del juego
+     */
     public Board board;
 
+    private final Map<String, Set<String>> wordsFilesMap = new HashMap<>();
+
+    private void initWords() {
+        try {
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            URL url = loader.getResource("words");
+            if (url == null) {
+                throw new Exception("No se encontro el directorio 'words' dentro de la carpeta resources.");
+            }
+            String path = url.getPath();
+            for (File wordsFile : Objects.requireNonNull(new File(path).listFiles())) {
+                Set<String> wordsInFile = new HashSet<>();
+                FileReader fileReader = new FileReader(wordsFile);
+                BufferedReader reader = new BufferedReader(fileReader);
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (!line.trim().equals("")) wordsInFile.add(line.trim());
+                }
+                String packName = wordsFile.getName().substring(0, wordsFile.getName().lastIndexOf(".")).toUpperCase();
+                wordsFilesMap.put(packName, wordsInFile);
+            }
+        } catch (Exception e) {
+            log.error("Se produjo un error al inicializar los packs de palabras", e);
+            System.exit(-1);
+        }
+    }
+
     public Game() {
+        initWords();
     }
 
-    public void initGame(ArrayList<Team> teams, int boardSize, int wordsByTeam, ArrayList<String> words, int turnDuration, SocketIOServer server) {
-        this.words = words;
-        this.boardSize = boardSize;
-        this.wordsByTeam = wordsByTeam;
-        this.timerAmount = turnDuration + 1; // Establezco un tiempo base para cada turno equivalente a 1 min + 1 seg
-
-        this.teams = new HashMap<>();
-        for (int index = 0; index < teams.size(); index++) {
-            this.teams.put(index, teams.get(index));
-        }
-
-        // Inicializo el juego
-        newBoard();
-
-        turnTimer = new Timer();
-        turnTimer.schedule(new TurnTimer(server, this), 0, 1000);
-    }
-
-    // When called, will change a tiles state to flipped
-    public boolean flipTile(int x, int y) {
-        Tile tile = board.getTile(x, y);
-        if (tile.isNotFlipped()) {
-            // Flip tile
-            tile.setFlipped(true);
-            if (tile.isDeath()) {
-                over = true;
-                for (Integer teamId : teams.keySet()) {
-                    if (!teamId.equals(turnId)) {
-                        winnerId.add(teamId);
-                    }
-                }
-            } else if (tile.isNeutral()) {
-                switchTurn(); // Switch turn if neutral was flipped
-            } else {
-                // Find the team of tile
-                Team tileFlippedTeam = teams.get(tile.getTeamId());
-                tileFlippedTeam.setPendingTiles(tileFlippedTeam.getPendingTiles() - 1);
-
-                if (!tile.getTeamId().equals(turnId)) {
-                    switchTurn(); // Switch turn if opposite teams tile was flipped
-                }
-            }
-            checkWin(); // See if the game is over
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    // Reset the timer and swap the turn over to the other team
-    public void switchTurn() {
-        // Reset timer
-        timer = timerAmount + 1;
-        int nextTeamId = turnId + 1;
-        if (nextTeamId >= teams.size()) {
-            nextTeamId = 0;
-        }
-
-        // Swith turn
-        turnId = nextTeamId;
-    }
-
-    public void updateWordPool(String... wordsPacks) {
-        Set<String> pool = new HashSet<>();
-        for (String wordsPack : wordsPacks) {
-            switch (wordsPack) {
-                case "BASE":
-                    pool.addAll(baseWords);
-                    break;
-                case "FRUITS":
-                    pool.addAll(fruitWords);
-                    break;
-            }
-        }
-
-        // Un default por las dudas
-        if (pool.isEmpty()) {
-            pool = baseWords;
-        }
-
-        words = new ArrayList<>(pool);
-    }
-
-    public void addPlayer(Player player) {
-        player.setTeamId(0);// Lo mando al team 0 y que se acomode manualmente
-        player.setRole(Player.Role.GUESSER);
-        players.add(player);
+    public Map<String, Set<String>> getWordsFilesMap() {
+        return wordsFilesMap;
     }
 
     public ArrayList<Player> getPlayers() {
@@ -225,6 +205,136 @@ public class Game {
     /*
      *  ----------------------- OK -----------------------
      */
+
+    public void initGame(ArrayList<Team> teams, int boardSize, int wordsByTeam, ArrayList<String> words, int turnDuration, SocketIOServer server) {
+        this.words = words;
+        this.boardSize = boardSize;
+        this.wordsByTeam = wordsByTeam;
+        this.timerAmount = turnDuration + 1; // Establezco un tiempo base para cada turno equivalente a 1 min + 1 seg
+
+        this.teams = new HashMap<>();
+        for (int index = 0; index < teams.size(); index++) {
+            this.teams.put(index, teams.get(index));
+        }
+
+        // Inicializo el juego
+        newBoard();
+
+        turnTimer = new Timer();
+        turnTimer.schedule(new TurnTimer(server, this), 0, 1000);
+    }
+
+    public void updateWordPool(String... wordsPacks) {
+        /*
+        Set<String> pool = new HashSet<>();
+        for (String wordsPack : wordsPacks) {
+            switch (wordsPack) {
+                case "BASE":
+                    pool.addAll(baseWords);
+                    break;
+                case "FRUITS":
+                    pool.addAll(fruitWords);
+                    break;
+            }
+        }
+
+        // Un default por las dudas
+        if (pool.isEmpty()) {
+            pool = baseWords;
+        }
+
+        words = new ArrayList<>(pool);
+        */
+    }
+
+    // When called, will change a tiles state to flipped
+    public boolean flipTile(int x, int y) {
+        Tile tile = board.getTile(x, y);
+        if (tile.isNotFlipped()) {
+            // Flip tile
+            tile.setFlipped(true);
+            if (tile.isDeath()) {
+                over = true;
+                for (Integer teamId : teams.keySet()) {
+                    if (!teamId.equals(turnId)) {
+                        winnerId.add(teamId);
+                    }
+                }
+            } else if (tile.isNeutral()) {
+                switchTurn(); // Switch turn if neutral was flipped
+            } else {
+                // Find the team of tile
+                Team tileFlippedTeam = teams.get(tile.getTeamId());
+                tileFlippedTeam.setPendingTiles(tileFlippedTeam.getPendingTiles() - 1);
+
+                if (!tile.getTeamId().equals(turnId)) {
+                    switchTurn(); // Switch turn if opposite teams tile was flipped
+                }
+            }
+            checkWin(); // See if the game is over
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Reinicio el timer y paso el turno al siguiente equipo
+     */
+    public void switchTurn() {
+        // Reset timer
+        timer = timerAmount + 1;
+        int nextTeamId = turnId + 1;
+        if (nextTeamId >= teams.size()) {
+            nextTeamId = 0;
+        }
+
+        // Swith turn
+        turnId = nextTeamId;
+    }
+
+    /**
+     * Agrega un nuevo jugador al juego, asignandolo al equipo con menor cantidad de jugadores o al equipo 0 si todos tienen la misma cantidad
+     *
+     * @param newPlayer Jugador a agregar
+     */
+    public void addPlayer(Player newPlayer) {
+        int candidateTeam = 0;
+        // Si es null es porque estoy creando el juego por primera vez y aun no se settearon los teams
+        if (teams != null) {
+            // Cuento los jugadores por equipo
+            Map<Integer, Integer> playersByTeam = new HashMap<>();
+            for (Player player : getPlayers()) {
+                Integer playersInTeam = playersByTeam.get(player.getTeamId());
+                if (playersInTeam == null) playersInTeam = 0;
+                playersByTeam.put(player.getTeamId(), ++playersInTeam);
+            }
+
+            Integer mayorCantidadDeJugadoresEnUnEquipo = playersByTeam.get(0);
+            Integer menorCantidadDeJugadoresEnUnEquipo = playersByTeam.get(0);
+            for (Integer teamId : teams.keySet()) {
+                // Si en un equipo no hay jugadores, lo asigno a ese y me voy
+                if (playersByTeam.get(teamId) == null) {
+                    candidateTeam = teamId;
+                    break;
+                }
+
+                // Controlo el maximo de jugadores en un equipo
+                Integer cantidadDeJugadoresEnElEquipo = playersByTeam.get(teamId);
+                if (cantidadDeJugadoresEnElEquipo > mayorCantidadDeJugadoresEnUnEquipo) {
+                    mayorCantidadDeJugadoresEnUnEquipo = cantidadDeJugadoresEnElEquipo;
+                }
+
+                // Si el equipo actual tiene menos jugadores que el equipo con menor cantidad de jugadores hasta ahora, el equipo actual es el candidato a colocar el nuevo jugador
+                if (cantidadDeJugadoresEnElEquipo < menorCantidadDeJugadoresEnUnEquipo) {
+                    menorCantidadDeJugadoresEnUnEquipo = cantidadDeJugadoresEnElEquipo;
+                    candidateTeam = teamId;
+                }
+            }
+        }
+        newPlayer.setTeamId(candidateTeam);// Lo mando al team con menos jugadores o al 0 si todos tienen la misma cantidad (o si estoy creado el juego)
+        players.add(newPlayer);
+    }
 
     /**
      * Busca un jugador por id
@@ -407,77 +517,33 @@ public class Game {
     public void removePlayer(SocketIOClient client) {
         if (players != null && !players.isEmpty()) {
             players.removeIf(player -> player.getId().equals(client.getSessionId().toString()));
+            if (players.isEmpty()) {
+                turnTimer.cancel();
+            }
         }
     }
 
     /**
-     * TODO
+     * Aleatoriza los todos los jugadores de manera pareja entre todos los equipos
      */
     public void randomizeTeams() {
-        /*
-        Map<Integer, Integer> playersByTeam = new HashMap<>();
-        for (Integer teamId : teams.keySet()) {
-            playersByTeam.put(teamId, 0);
-        }
-
-        int menorCantidadDeJugadoresEnUnEquipo = 0;
-        int mayorCantidadDeJugadoresEnUnEquipo = 0;
-
         Random r = new Random();
-        for (Player player : getPlayers()) {
-            int newTeamId = r.nextInt(teams.size());
-            Integer playersInTeam = playersByTeam.get(newTeamId);
-            if (playersInTeam == 0) {
-                playersInTeam++;
-                player.setTeamId(newTeamId);
-            } else {
-
+        ArrayList<Player> playersAlreadyMoved = new ArrayList<>();
+        while (playersAlreadyMoved.size() != getPlayers().size()) {
+            Player randomPlayer = getPlayers().get(r.nextInt(getPlayers().size()));
+            while (playersAlreadyMoved.contains(randomPlayer)) {
+                randomPlayer = getPlayers().get(r.nextInt(getPlayers().size()));
             }
+            playersAlreadyMoved.add(randomPlayer);
+        }
 
-            // Miro todos los equipos y cuentos sus jugadores para reasignarlos parejo
-            for (Integer teamId : playersByTeam.keySet()) {
-                Integer actualPlayersInTeam = playersByTeam.get(teamId);
-                if (actualPlayersInTeam > mayorCantidadDeJugadoresEnUnEquipo) {
-                    mayorCantidadDeJugadoresEnUnEquipo = actualPlayersInTeam;
-                }
+        int teamId= 0;
+        for (Player player : playersAlreadyMoved) {
+            player.setTeamId(teamId++);
+            if (teamId >= teams.size()) {
+                teamId = 0;
             }
         }
-
-
-
-
-        ArrayList<Player> players = getPlayers();
-        ArrayList<Player> placed = new ArrayList<>();
-
-        while (placed.size() < players.size()) {
-            Player randomPlayer = players.get(r.nextInt(players.size()));
-            if (!placed.contains(randomPlayer)) placed.add(randomPlayer);
-        }
-*/
-        /*
-        let color = 0;    // Get a starting color
-        if (Math.random() < 0.5) color = 1
-
-        let keys = Object.keys(players) // Get a list of players in the room from the dictionary
-        let placed = []                 // Init a temp array to keep track of who has already moved
-
-        while (placed.length < keys.length){
-            let selection = keys[Math.floor(Math.random() * keys.length)] // Select random player index
-            if (!placed.includes(selection)) placed.push(selection) // If index hasn't moved, move them
-        }
-
-        // Place the players in alternating teams from the new random order
-        for (let i = 0; i < placed.length; i++){
-            let player = players[placed[i]]
-            if (color === 0){
-                player.team = 'red'
-                color = 1
-            } else {
-                player.team = 'blue'
-                color = 0
-            }
-        }
-        */
     }
 }
 
