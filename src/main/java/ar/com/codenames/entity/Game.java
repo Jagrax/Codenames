@@ -67,7 +67,6 @@ public class Game {
             tile.setFlipped(true);
             if (tile.isDeath()) {
                 over = true;
-                turnTimer.cancel();
                 for (Integer teamId : teams.keySet()) {
                     if (!teamId.equals(turnId)) {
                         winnerId.add(teamId);
@@ -359,7 +358,6 @@ public class Game {
             if (countPendingTiles(teamId) == 0) {
                 over = true;
                 winnerId.add(teamId);
-                turnTimer.cancel();
             }
         }
     }
