@@ -107,6 +107,8 @@ public class GameLauncher {
             client.sendEvent("createResponse", createResponse.toString());
             if (success) {
                 server.getBroadcastOperations().sendEvent("gameCreatedResponse", new JSONObject().put("gameCreated", !game.getPlayers().isEmpty()).toString());
+                // Le envio al jugador que se cambio, su nuevo teamId
+                client.sendEvent("newTeamAssigned", game.getPlayer(client).getTeamId());
                 gameUpdate();
             }
         });
@@ -131,7 +133,11 @@ public class GameLauncher {
             joinResponse.put("msg", msg);
             joinResponse.put("game", new JSONObject(game).toString());
             client.sendEvent("joinResponse", joinResponse.toString());
-            if (success) gameUpdate();
+            if (success) {
+                // Le envio al jugador que se cambio, su nuevo teamId
+                client.sendEvent("newTeamAssigned", game.getPlayer(client).getTeamId());
+                gameUpdate();
+            }
         });
 
         server.addEventListener("leaveRoom", RequestObject.class, (client, data, ackSender) -> {
