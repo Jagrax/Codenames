@@ -4,6 +4,7 @@ import ar.com.codenames.entity.Game;
 import ar.com.codenames.entity.Player;
 import ar.com.codenames.entity.Team;
 import com.corundumstudio.socketio.Configuration;
+import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -29,6 +30,10 @@ public class GameLauncher {
     private final SocketIOServer server;
     private final Game game = new Game();
 
+    private enum EventType {
+        CONNECTED, DISCONNECTED, REQUEST
+    }
+
     public GameLauncher(String hostName, int port) {
         log.info("Inicializando GameLauncher");
 
@@ -38,9 +43,11 @@ public class GameLauncher {
 
         server = new SocketIOServer(configuration);
 
-        server.addConnectListener(client -> log.info("Se ha conectado el cliente " + client.getSessionId().toString()));
+        server.addConnectListener(client -> logEvent(EventType.CONNECTED, null, client));
 
         server.addDisconnectListener(client -> {
+            logEvent(EventType.DISCONNECTED, null, client);
+
             game.removePlayer(client);
             if (!game.getPlayers().isEmpty()) {
                 gameUpdate();
@@ -52,6 +59,7 @@ public class GameLauncher {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         server.addEventListener("isGameCreated", RequestObject.class, (client, data, ackSender) -> {
+            logEvent(EventType.REQUEST, "isGameCreated", client);
             JSONObject gameCreatedResponse = new JSONObject();
             gameCreatedResponse.put("gameCreated", !game.getPlayers().isEmpty());
             gameCreatedResponse.put("wordPacks", game.getWordsFilesMap().keySet());
@@ -59,6 +67,7 @@ public class GameLauncher {
         });
 
         server.addEventListener("createGame", RequestObject.class, (client, data, ackSender) -> {
+            logEvent(EventType.REQUEST, "createGame", client);
             boolean success = true;
             String msg = null;
             JSONObject createResponse = new JSONObject();
@@ -114,6 +123,7 @@ public class GameLauncher {
         });
 
         server.addEventListener("joinGame", RequestObject.class, (client, data, ackSender) -> {
+            logEvent(EventType.REQUEST, "joinGame", client);
             boolean success = true;
             String msg = null;
             String nickname = data.getNickname();
@@ -141,6 +151,7 @@ public class GameLauncher {
         });
 
         server.addEventListener("leaveRoom", RequestObject.class, (client, data, ackSender) -> {
+            logEvent(EventType.REQUEST, "leaveRoom", client);
             game.removePlayer(client);
             gameUpdate();
             client.sendEvent("leaveResponse", new JSONObject().put("success", true).toString());
@@ -152,6 +163,7 @@ public class GameLauncher {
 
         // Join Team. Se llama cuando un jugador hace click en el boton de 'Cambiar de equipo a (red, blue, green, yellow, cyan)'
         server.addEventListener("joinTeam", RequestObject.class, (client, data, ackSender) -> {
+            logEvent(EventType.REQUEST, "joinTeam", client);
             Player player = game.getPlayer(client);
             if (!player.getTeamId().equals(data.getTeamId())) {
                 // Si el equipo al que quiere ir no es en el que ya esta, procedo a moverlo
@@ -165,12 +177,14 @@ public class GameLauncher {
 
         // Randomize Team. Se llama cuando un jugador hace click en el boton de 'Aleatorizar equipos'
         server.addEventListener("randomizeTeams", RequestObject.class, (client, data, ackSender) -> {
+            logEvent(EventType.REQUEST, "randomizeTeams", client);
             game.randomizeTeams();
             gameUpdate();
         });
 
         // New Game. Se llama cuando un jugador hace click en el boton 'Nueva partida'
         server.addEventListener("newGame", RequestObject.class, (client, data, ackSender) -> {
+            logEvent(EventType.REQUEST, "newGame", client);
             // Inicializo una nueva partida
             game.newBoard();
             // Establezco a todos los jugadores como 'Adivinos' (guessers)
@@ -183,6 +197,7 @@ public class GameLauncher {
 
         // Switch role. Se llama cuando el jugador hace click en el toogle de Spymaster
         server.addEventListener("switchRole", RequestObject.class, (client, data, ackSender) -> {
+            logEvent(EventType.REQUEST, "switchRole", client);
             Player player = game.getPlayer(client);
             if (player != null) {
                 player.setRole(data.getRole());
@@ -195,11 +210,13 @@ public class GameLauncher {
 
         // End Turn. Se llama cuando un jugador hace click en 'Finalizar turno'
         server.addEventListener("endTurn", RequestObject.class, (client, data, ackSender) -> {
+            logEvent(EventType.REQUEST, "endTurn", client);
             game.switchTurn();
             gameUpdate();
         });
 
         server.addEventListener("clickTile", RequestObject.class, (client, data, ackSender) -> {
+            logEvent(EventType.REQUEST, "clickTile", client);
             Player player = game.getPlayer(client);
 
             // Para dar vuelta una ficha tiene:
@@ -226,6 +243,27 @@ public class GameLauncher {
     private boolean validateWords(int boardSize, int teams, int wordsByTeam) {
         int maxWords = boardSize * boardSize;
         return ((wordsByTeam * teams) + 1) < maxWords - 1;
+    }
+
+    private void logEvent(EventType eventType, String eventName, SocketIOClient client) {
+        String clientId = client.getSessionId().toString();
+        String clientIp = client.getHandshakeData().getAddress().getHostString();
+        String nickname = null;
+        Player playerDisconnected = game.getPlayer(client);
+        if (playerDisconnected != null) nickname += ", nickname=" + playerDisconnected.getNickname();
+
+        String msg = "[" + eventType + "]";
+        if (eventName != null) {
+            msg += " EventName='" + eventName + "'.";
+        }
+
+        msg += " Client[sessionId=" + clientId + ", ip=" + clientIp;
+        if (nickname != null) {
+            msg += ", nickname=" + nickname;
+        }
+
+        msg += "]";
+        log.info(msg);
     }
 
     public static void main(String[] args) {

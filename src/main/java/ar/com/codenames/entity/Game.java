@@ -436,7 +436,7 @@ public class Game {
         }
 
         // TODO - Comentar o parametrizar
-        printBoard();
+        //printBoard();
     }
 
     /**
