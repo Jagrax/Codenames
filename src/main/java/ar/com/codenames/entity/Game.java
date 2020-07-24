@@ -91,7 +91,10 @@ public class Game {
                 BufferedReader reader = new BufferedReader(fileReader);
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    if (!line.trim().equals("")) wordsInFile.add(line.trim());
+                    if (!line.trim().equals("")) {
+                        if (wordsInFile.contains(line.trim())) log.info("El archivo " + wordsFile.getName() + " tiene mas de una vez la palabra " + line.trim());
+                        wordsInFile.add(line.trim());
+                    }
                 }
                 String packName = wordsFile.getName().substring(0, wordsFile.getName().lastIndexOf(".")).toUpperCase();
                 wordsFilesMap.put(packName, wordsInFile);
