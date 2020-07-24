@@ -207,6 +207,7 @@ public class Game {
      */
 
     public void initGame(ArrayList<Team> teams, int boardSize, int wordsByTeam, ArrayList<String> words, int turnDuration, SocketIOServer server) {
+        log.info("initGame called");
         this.words = words;
         this.boardSize = boardSize;
         this.wordsByTeam = wordsByTeam;
