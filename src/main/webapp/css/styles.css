@@ -330,3 +330,8 @@ h4 {
     padding-left: .75rem;
     padding-right: .75rem;
 }
+
+.dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+}
