@@ -101,6 +101,111 @@ body {
     height: 128px;
 }
 
+.van-a-tener-que-pensar {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_003.png");
+    width: 128px;
+    height: 128px;
+}
+
+.no-se-puede-jugar-con-todos-gritando {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_004.png");
+    width: 256px;
+    height: 256px;
+}
+
+.tienen-un-chat-paralelo {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_005.png");
+    width: 256px;
+    height: 256px;
+}
+
+.mmmmm {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_006.png");
+    width: 128px;
+    height: 128px;
+}
+
+.vamo-a-melinear {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_007.png");
+    width: 128px;
+    height: 128px;
+}
+
+.a-ver-mario-tira-un-x4 {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_008.png");
+    width: 128px;
+    height: 128px;
+}
+
+.vos-tenes-que-sentir-el-juego {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_009.png");
+    width: 128px;
+    height: 128px;
+}
+
+.se-viene-la-negra {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_010.png");
+    width: 128px;
+    height: 128px;
+}
+
+.tratando-de-entender-a-mario {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_011.png");
+    width: 128px;
+    height: 128px;
+}
+
+.no-vamos-a-pensar {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_012.png");
+    width: 128px;
+    height: 128px;
+}
+
+.no-no-no-estan-haciendo-trampa {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_013.png");
+    width: 128px;
+    height: 128px;
+}
+
+.amor {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_014.png");
+    width: 128px;
+    height: 128px;
+}
+
+.ok-sofi {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_015.png");
+    width: 256px;
+    height: 256px;
+}
+
+.mario-hace-trampa {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_016.png");
+    width: 256px;
+    height: 256px;
+}
+
+.martin-hace-trampa {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_017.png");
+    width: 256px;
+    height: 256px;
+}
+
 @keyframes animParticle {
   from {
     transform: translateY(0px);
@@ -112,6 +217,7 @@ body {
 
 @keyframes stickerAnim64  {from{transform: translateY(calc(100vh + 64px))} to{transform: translateY(-64px)}}
 @keyframes stickerAnim128 {from{transform: translateY(calc(100vh + 128px))}to{transform: translateY(-128px)}}
+@keyframes stickerAnim256 {from{transform: translateY(calc(100vh + 256px))}to{transform: translateY(-256px)}}
 
 .page-wrapper {
   z-index: 2;
