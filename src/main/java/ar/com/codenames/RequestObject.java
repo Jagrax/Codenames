@@ -17,6 +17,7 @@ public class RequestObject {
     private Player.Role role;
     private ArrayList<String> teamColors;
     private ArrayList<String> wordsPacksSelected;
+    private String sticker;
 
     public RequestObject() {
     }
@@ -107,5 +108,13 @@ public class RequestObject {
 
     public void setWordsPacksSelected(ArrayList<String> wordsPacksSelected) {
         this.wordsPacksSelected = wordsPacksSelected;
+    }
+
+    public String getSticker() {
+        return sticker;
+    }
+
+    public void setSticker(String sticker) {
+        this.sticker = sticker;
     }
 }

@@ -229,6 +229,11 @@ public class GameLauncher {
             }
         });
 
+        server.addEventListener("sendSticker", RequestObject.class, (client, data, ackSender) -> {
+            logEvent(EventType.REQUEST, "sendSticker", client);
+            server.getBroadcastOperations().sendEvent("stickerResponse", data.getSticker());
+        });
+
         server.start();
         log.info("Juego inicializado correctamente");
     }
@@ -288,7 +293,7 @@ public class GameLauncher {
         }
 
         if (hostName == null) {
-            System.out.println("No se difinio el 'hostName' como parametro, se utiliza el default '0.0.0.0'. Ejemplo para definirlo: -hostName 192.168.0.13");
+//            System.out.println("No se difinio el 'hostName' como parametro, se utiliza el default '0.0.0.0'. Ejemplo para definirlo: -hostName 192.168.0.13");
             hostName = "0.0.0.0";
         }
 

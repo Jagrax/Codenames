@@ -28,30 +28,30 @@
             <div class="particle particle-4"></div>
         </div>
 
-        <div class="page-wrapper"> 
-            <h4>CODENAMES V1.3-BETA</h4>
-            <div id="main-carousel" class="carousel slide" style="display: none">
+        <div class="container-fluid page-wrapper">
+            <h4>CODENAMES V1.4</h4>
+            <div id="main-carousel" class="carousel slide" style="display:none">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <div class="card">
+                        <div class="card container">
                             <div class="card-body">
                                 <div class="form-group row">
-                                    <label for="join-nickname" class="col-3 col-form-label col-form-label-sm">Apodo</label>
+                                    <label for="join-nickname" class="col-3 col-form-label col-form-label-sm text-nowrap">Apodo</label>
                                     <div class="col-3">
                                         <input id="join-nickname" type="text" class="form-control form-control-sm"/>
                                     </div>
                                     <div class="col-6"><button type="button" class="btn btn-sm btn-block btn-success" id="join-enter">Unirse a partida</button></div>
-                                    <label for="boardSize" class="col-3 col-form-label col-form-label-sm" config-field>Tamaño del tablero</label>
+                                    <label for="boardSize" class="col-3 col-form-label col-form-label-sm text-nowrap" config-field>Tamaño del tablero</label>
                                     <div class="col-3" config-field>
                                         <input id="boardSize" type="number" min="3" max="6" class="form-control form-control-sm" value="5"/>
                                     </div>
                                 </div>
                                 <div class="form-group row" config-field>
-                                    <label for="turnDuration" class="col-3 col-form-label col-form-label-sm">Duración de cada turno</label>
+                                    <label for="turnDuration" class="col-3 col-form-label col-form-label-sm text-nowrap">Duración de cada turno</label>
                                     <div class="col-3">
                                         <input id="turnDuration" type="number" min="30" max="240" class="form-control form-control-sm" value="60"/>
                                     </div>
-                                    <label for="wordsByTeam" class="col-3 col-form-label col-form-label-sm">Palabras por equipo</label>
+                                    <label for="wordsByTeam" class="col-3 col-form-label col-form-label-sm text-nowrap">Palabras por equipo</label>
                                     <div class="col-3">
                                         <input id="wordsByTeam" type="number" min="1" max="36" class="form-control form-control-sm" value="8"/>
                                     </div>
@@ -59,7 +59,7 @@
                                 <div class="row" config-field>
                                     <div class="col-6">
                                         <div class="form-group row">
-                                            <label for="team-1-color" class="col-6 col-form-label col-form-label-sm">Equipo #1</label>
+                                            <label for="team-1-color" class="col-6 col-form-label col-form-label-sm text-nowrap">Equipo #1</label>
                                             <div class="col-6">
                                                 <select id="team-1-color" class="form-control form-control-sm">
                                                     <option selected>Rojo</option>
@@ -71,7 +71,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="team-2-color" class="col-6 col-form-label col-form-label-sm">Equipo #2</label>
+                                            <label for="team-2-color" class="col-6 col-form-label col-form-label-sm text-nowrap">Equipo #2</label>
                                             <div class="col-6">
                                                 <select id="team-2-color" class="form-control form-control-sm">
                                                     <option>Rojo</option>
@@ -83,7 +83,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="team-3-color" class="col-6 col-form-label col-form-label-sm">Equipo #3</label>
+                                            <label for="team-3-color" class="col-6 col-form-label col-form-label-sm text-nowrap">Equipo #3</label>
                                             <div class="col-6">
                                                 <select id="team-3-color" class="form-control form-control-sm">
                                                     <option selected></option>
@@ -96,7 +96,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="team-4-color" class="col-6 col-form-label col-form-label-sm">Equipo #4</label>
+                                            <label for="team-4-color" class="col-6 col-form-label col-form-label-sm text-nowrap">Equipo #4</label>
                                             <div class="col-6">
                                                 <select id="team-4-color" class="form-control form-control-sm">
                                                     <option selected></option>
@@ -116,7 +116,7 @@
                                     </div>
                                 </div>
                                 <div class="row" config-field>
-                                    <label for="team-5-color" class="col-3 col-form-label col-form-label-sm">Equipo #5</label>
+                                    <label for="team-5-color" class="col-3 col-form-label col-form-label-sm text-nowrap">Equipo #5</label>
                                     <div class="col-3">
                                         <select id="team-5-color" class="form-control form-control-sm">
                                             <option selected></option>
@@ -140,7 +140,19 @@
                             <div class="row">
                                 <div class="col-12 col-xl-4">
                                     <div class="row">
-                                        <div class="col-5 col-xl-12 font-size-big mb-2-half"><button id="leave-game" type="button" class="btn btn-outline-light">Salir</button></div>
+                                        <div class="col-5 col-xl-12 font-size-big mb-2-half">
+                                            <div class="dropdown">
+                                                <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Stickers
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item" href="#" onclick="sendSticker('nene')">Nene</a>
+                                                    <a class="dropdown-item" href="#" onclick="sendSticker('wat')">Wat</a>
+                                                </div>
+                                                <button id="leave-game" type="button" class="btn btn-outline-light">Salir</button>
+                                            </div>
+
+                                        </div>
                                         <div class="col-7 col-xl-12">
                                             <div class="bg-white rounded p-1">
                                                 <h6 class="text-center">Jugadores</h6>

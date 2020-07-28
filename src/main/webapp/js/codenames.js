@@ -1,5 +1,6 @@
 const socket = io('http://pacific-badlands-39971.herokuapp.com'); // Connect to server
 
+let animationWrapper = $('.animation-wrapper');
 let mainCarousel = $('.carousel');
 let myTeamId;
 
@@ -168,7 +169,11 @@ endTurn.on("click", function () {
 
 // User Clicks Tile
 function tileClicked(x, y) {
-    socket.emit('clickTile', {x: x, y: y})
+    socket.emit('clickTile', {x: x, y: y});
+}
+
+function sendSticker(stickerName) {
+    socket.emit('sendSticker', {sticker: stickerName});
 }
 
 // Server Responses to this client
@@ -244,6 +249,15 @@ socket.on('gameState', function (data) {
         // Update the board display
         updateBoard(game.board, game.teams);
     }
+});
+
+socket.on('stickerResponse', function (stickerName) {
+    let cssLeft = Math.floor((Math.random() * 50) + 25);
+    let stickerDiv = $("<div class='position-absolute'></div>").addClass(stickerName).css('left', cssLeft + 'vw');
+    animationWrapper.append(stickerDiv);
+    setTimeout(function () {
+        stickerDiv.remove();
+    }, 10000);
 });
 
 // Utility Functions

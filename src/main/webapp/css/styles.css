@@ -70,7 +70,6 @@ body {
   border-radius: 50%;
   height: 3px;
   width: 3px;
-  border-radius: 50%;
 }
 
 .particle-4 {
@@ -88,6 +87,20 @@ body {
   width: 1px;
 }
 
+.nene {
+    animation: stickerAnim64 10s linear;
+    background-image: url("../images/sticker_001.png");
+    width: 64px;
+    height: 64px;
+}
+
+.wat {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_002.png");
+    width: 128px;
+    height: 128px;
+}
+
 @keyframes animParticle {
   from {
     transform: translateY(0px);
@@ -96,6 +109,9 @@ body {
     transform: translateY(-2560px);
   }
 }
+
+@keyframes stickerAnim64  {from{transform: translateY(calc(100vh + 64px))} to{transform: translateY(-64px)}}
+@keyframes stickerAnim128 {from{transform: translateY(calc(100vh + 128px))}to{transform: translateY(-128px)}}
 
 .page-wrapper {
   z-index: 2;
