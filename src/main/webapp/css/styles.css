@@ -206,6 +206,34 @@ body {
     height: 256px;
 }
 
+.perdon-no-lei {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_018.png");
+    width: 256px;
+    height: 256px;
+}
+
+.muy-buena-la-pista-super-clara-che {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_019.png");
+    width: 256px;
+    height: 256px;
+}
+
+.entendiendonos-mucho {
+    animation: stickerAnim192 10s linear;
+    background-image: url("../images/sticker_020.png");
+    width: 192px;
+    height: 192px;
+}
+
+.que-complejo-che {
+    animation: stickerAnim192 10s linear;
+    background-image: url("../images/sticker_021.png");
+    width: 192px;
+    height: 192px;
+}
+
 @keyframes animParticle {
   from {
     transform: translateY(0px);
@@ -217,6 +245,7 @@ body {
 
 @keyframes stickerAnim64  {from{transform: translateY(calc(100vh + 64px))} to{transform: translateY(-64px)}}
 @keyframes stickerAnim128 {from{transform: translateY(calc(100vh + 128px))}to{transform: translateY(-128px)}}
+@keyframes stickerAnim192 {from{transform: translateY(calc(100vh + 192px))}to{transform: translateY(-192px)}}
 @keyframes stickerAnim256 {from{transform: translateY(calc(100vh + 256px))}to{transform: translateY(-256px)}}
 
 .page-wrapper {
