@@ -75,6 +75,11 @@ public class Game {
      */
     public Board board;
 
+    /**
+     * Id del equipo que comenzo en la partida anterior
+     */
+    public Integer startedLastGameTeamId;
+
     private final Map<String, Set<String>> wordsFilesMap = new HashMap<>();
 
     private void initWords() {
@@ -477,13 +482,21 @@ public class Game {
     }
 
     /**
-     *  Determina de que equipo es el turno de manera aleatorio
+     *  Determina de que equipo es el turno en base al turno del ultimo equipo
      */
     private void randomTurn() {
-        int teamId = new Random().nextInt(teams.size());
+        int teamId;
+        if (startedLastGameTeamId == null) {
+            startedLastGameTeamId = 0;
+            teamId = startedLastGameTeamId;
+        } else {
+            teamId = startedLastGameTeamId + 1;
+        }
+        if (teamId == teams.size()) teamId = 0;
         for (Integer teamIndex : teams.keySet()) {
             if (teamIndex.equals(teamId)) {
                 turnId = teamIndex;
+                startedLastGameTeamId = turnId;
                 break;
             }
         }

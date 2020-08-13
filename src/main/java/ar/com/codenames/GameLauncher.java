@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -192,6 +193,7 @@ public class GameLauncher {
 
             server.getBroadcastOperations().sendEvent("switchRoleResponse", new JSONObject().put("success", true).put("role", Player.Role.GUESSER).toString());
             server.getBroadcastOperations().sendEvent("newGameResponse", new JSONObject().put("success", true).toString());
+            TimeUnit.SECONDS.sleep(1); // Para que la animacion en pantalla funcione bien (es horrible esta solucion)
             gameUpdate();
         });
 

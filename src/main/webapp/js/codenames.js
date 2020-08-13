@@ -1,8 +1,11 @@
-const socket = io('http://pacific-badlands-39971.herokuapp.com'); // Connect to server
+// const socket = io('http://pacific-badlands-39971.herokuapp.com'); // Connect to server
+const socket = io('http://localhost:9093/'); // Connect to server
 
 let animationWrapper = $('.animation-wrapper');
 let mainCarousel = $('.carousel');
 let myTeamId;
+let unhideWithEffect = false;
+let effectWorking = false;
 
 // Sign In Page Elements
 ////////////////////////////////////////////////////////////////////////////
@@ -155,6 +158,7 @@ randomizeTeams.on("click", function () {
 // User Starts New Game
 newGame.on("click", function () {
     socket.emit('newGame', {});
+    $(this).prop('disabled', true);
 });
 
 // User Picks a new Role
@@ -221,7 +225,7 @@ socket.on('newGameResponse', function (data) {
     data = JSON.parse(data);
     if (data.success) {
         switchRole.prop('checked', false);
-        wipeBoard();
+        wipeBoard(true);
     }
 });
 
@@ -264,14 +268,23 @@ socket.on('stickerResponse', function (stickerName) {
 ////////////////////////////////////////////////////////////////////////////
 
 // Wipe all of the descriptor tile classes from each tile
-function wipeBoard() {
+function wipeBoard(useAnimation) {
+    effectWorking = useAnimation;
+    unhideWithEffect = useAnimation;
     let boardSize = gameBoard.children('table').children('tr').length;
     for (let x = 0; x < boardSize; x++) {
         let row = $('#row-' + (x + 1));
         for (let y = 0; y < boardSize; y++) {
             let button = row.children().eq(y).children().first();
-            // button.prop("disabled", false);
-            button.prop("class", "btn btn-block bg-white");
+            if (useAnimation) {
+                button.addClass('flipOutX animated fast');
+                button.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                    if (x + 1 === boardSize && y + 1 === boardSize) effectWorking = false
+                });
+            } else {
+                // button.prop("disabled", false);
+                button.prop("class", "btn btn-block bg-white");
+            }
         }
     }
 }
@@ -314,6 +327,9 @@ function updateInfo(game, team) {
 
 // Update the board
 function updateBoard(board, teams) {
+    while(effectWorking) {
+        console.info("effectWorking");
+    }
     // Add description classes to each tile depending on the tiles color
     for (let x = 0; x < board.tiles.length; x++) {
         let row = $('#row-' + (x + 1));
@@ -339,7 +355,20 @@ function updateBoard(board, teams) {
                     button.removeClass('unflipped');
                 }
             }
+            if (unhideWithEffect) {
+                button.removeClass("flipOutX");
+                button.addClass("flipInX");
+                button.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                    button.removeClass("flipInX");
+                    button.removeClass("animated");
+                    button.removeClass("fast");
+                });
+            }
         }
+    }
+
+    if (unhideWithEffect) {
+        newGame.prop('disabled', false);
     }
 }
 
