@@ -282,6 +282,13 @@ body.lite {
     height: 407px;
 }
 
+.reafirmo-mi-certeza {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_028.png");
+    width: 512px;
+    height: 512px;
+}
+
 @keyframes animParticle {
   from {
     transform: translateY(0px);
