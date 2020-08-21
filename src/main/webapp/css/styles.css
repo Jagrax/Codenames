@@ -283,10 +283,17 @@ body.lite {
 }
 
 .reafirmo-mi-certeza {
-    animation: stickerAnim512 10s linear;
+    animation: stickerAnim256 10s linear;
     background-image: url("../images/sticker_028.png");
-    width: 512px;
-    height: 512px;
+    width: 256px;
+    height: 256px;
+}
+
+.ganen-o-mueran {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_029.png");
+    width: 256px;
+    height: 256px;
 }
 
 @keyframes animParticle {
