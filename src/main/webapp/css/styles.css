@@ -303,6 +303,27 @@ body.lite {
     height: 256px;
 }
 
+.olvidense-de-todo-pero-no-se-olviden-todo {
+    animation: stickerAnim384 10s linear;
+    background-image: url("../images/sticker_031.png");
+    width: 384px;
+    height: 384px;
+}
+
+.ya-dame-la-maldita-pista {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_032.png");
+    width: 256px;
+    height: 256px;
+}
+
+.joaco-pero-porque-tocas-eso {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_033.png");
+    width: 256px;
+    height: 256px;
+}
+
 @keyframes animParticle {
   from {
     transform: translateY(0px);
@@ -316,6 +337,7 @@ body.lite {
 @keyframes stickerAnim128 {from{transform: translateY(calc(100vh + 128px))}to{transform: translateY(-128px)}}
 @keyframes stickerAnim192 {from{transform: translateY(calc(100vh + 192px))}to{transform: translateY(-192px)}}
 @keyframes stickerAnim256 {from{transform: translateY(calc(100vh + 256px))}to{transform: translateY(-256px)}}
+@keyframes stickerAnim384 {from{transform: translateY(calc(100vh + 384px))}to{transform: translateY(-384px)}}
 @keyframes stickerAnim512 {from{transform: translateY(calc(100vh + 512px))}to{transform: translateY(-512px)}}
 
 .page-wrapper {
