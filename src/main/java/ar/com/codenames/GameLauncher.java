@@ -3,6 +3,7 @@ package ar.com.codenames;
 import ar.com.codenames.entity.Game;
 import ar.com.codenames.entity.Player;
 import ar.com.codenames.entity.Team;
+//import ar.com.dixit.entity.Dixit;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
@@ -225,6 +226,7 @@ public class GameLauncher {
             // - Tiene que ser mi turno
             // - Y la ficha a voltear no tiene que estar ya volteada (esto lo hace la clase Game)
             if (!game.isOver() && player.getRole().equals(Player.Role.GUESSER) && game.getTurnId().equals(player.getTeamId()) && game.flipTile(data.getX(), data.getY())) {
+                server.getBroadcastOperations().sendEvent("serverMsgToLog", game.getPlayer(client).getNickname() + " ha tocado la palabra " + game.getBoard().getTile(data.getX(), data.getY()).getWord());
                 gameUpdate();
             }
         });
@@ -303,5 +305,6 @@ public class GameLauncher {
         }
 
         new GameLauncher(hostName, port);
+//        new Dixit();
     }
 }

@@ -324,6 +324,13 @@ body.lite {
     height: 256px;
 }
 
+.moria-hace-lo-que-se-te-cante {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_034.png");
+    width: 256px;
+    height: 256px;
+}
+
 @keyframes animParticle {
   from {
     transform: translateY(0px);

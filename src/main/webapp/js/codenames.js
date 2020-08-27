@@ -30,6 +30,7 @@ let leaveGame = $('#leave-game');
 // Divs
 let gameBoard = $('#game-board');
 let teamsTables = $('#teams-tables');
+let gameLogTextarea = $('#game-log');
 // Buttons
 let randomizeTeams = $('#randomize-teams');
 let endTurn = $('#end-turn');
@@ -221,6 +222,7 @@ socket.on('newGameResponse', function (data) {
     data = JSON.parse(data);
     if (data.success) {
         switchRole.prop('checked', false);
+        gameLogTextarea.val("Registro de la partida");
         wipeBoard();
     }
 });
@@ -258,6 +260,11 @@ socket.on('stickerResponse', function (stickerName) {
     setTimeout(function () {
         stickerDiv.remove();
     }, 10000);
+});
+
+socket.on('serverMsgToLog', function (serverMsgToLog) {
+    gameLogTextarea.val(gameLogTextarea.val() + "\n" + serverMsgToLog);
+    gameLogTextarea.scrollTop(gameLogTextarea[0].scrollHeight - gameLogTextarea.height());
 });
 
 // Utility Functions
