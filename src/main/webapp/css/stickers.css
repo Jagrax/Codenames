@@ -1,0 +1,280 @@
+.animation-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes stickerAnim64  {from{transform: translateY(calc(100vh + 64px))} to{transform: translateY(-64px)}}
+@keyframes stickerAnim128 {from{transform: translateY(calc(100vh + 128px))}to{transform: translateY(-128px)}}
+@keyframes stickerAnim192 {from{transform: translateY(calc(100vh + 192px))}to{transform: translateY(-192px)}}
+@keyframes stickerAnim256 {from{transform: translateY(calc(100vh + 256px))}to{transform: translateY(-256px)}}
+@keyframes stickerAnim384 {from{transform: translateY(calc(100vh + 384px))}to{transform: translateY(-384px)}}
+@keyframes stickerAnim512 {from{transform: translateY(calc(100vh + 512px))}to{transform: translateY(-512px)}}
+
+.nene {
+    animation: stickerAnim64 10s linear;
+    background-image: url("../images/sticker_001.png");
+    width: 64px;
+    height: 64px;
+}
+
+.wat {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_002.png");
+    width: 128px;
+    height: 128px;
+}
+
+.van-a-tener-que-pensar {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_003.png");
+    width: 128px;
+    height: 128px;
+}
+
+.no-se-puede-jugar-con-todos-gritando {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_004.png");
+    width: 256px;
+    height: 256px;
+}
+
+.tienen-un-chat-paralelo {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_005.png");
+    width: 256px;
+    height: 256px;
+}
+
+.mmmmm {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_006.png");
+    width: 128px;
+    height: 128px;
+}
+
+.vamo-a-melinear {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_007.png");
+    width: 128px;
+    height: 128px;
+}
+
+.a-ver-mario-tira-un-x4 {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_008.png");
+    width: 128px;
+    height: 128px;
+}
+
+.vos-tenes-que-sentir-el-juego {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_009.png");
+    width: 128px;
+    height: 128px;
+}
+
+.se-viene-la-negra {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_010.png");
+    width: 128px;
+    height: 128px;
+}
+
+.tratando-de-entender-a-mario {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_011.png");
+    width: 128px;
+    height: 128px;
+}
+
+.no-vamos-a-pensar {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_012.png");
+    width: 128px;
+    height: 128px;
+}
+
+.no-no-no-estan-haciendo-trampa {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_013.png");
+    width: 128px;
+    height: 128px;
+}
+
+.amor {
+    animation: stickerAnim128 10s linear;
+    background-image: url("../images/sticker_014.png");
+    width: 128px;
+    height: 128px;
+}
+
+.ok-sofi {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_015.png");
+    width: 256px;
+    height: 256px;
+}
+
+.mario-hace-trampa {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_016.png");
+    width: 256px;
+    height: 256px;
+}
+
+.martin-hace-trampa {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_017.png");
+    width: 256px;
+    height: 256px;
+}
+
+.perdon-no-lei {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_018.png");
+    width: 256px;
+    height: 256px;
+}
+
+.muy-buena-la-pista-super-clara-che {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_019.png");
+    width: 256px;
+    height: 256px;
+}
+
+.entendiendonos-mucho {
+    animation: stickerAnim192 10s linear;
+    background-image: url("../images/sticker_020.png");
+    width: 192px;
+    height: 192px;
+}
+
+.que-complejo-che {
+    animation: stickerAnim192 10s linear;
+    background-image: url("../images/sticker_021.png");
+    width: 192px;
+    height: 192px;
+}
+
+.puluu-olvidense-todo {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_022.png");
+    width: 512px;
+    height: 512px;
+}
+
+.pensa-como-mario {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_023.png");
+    width: 256px;
+    height: 256px;
+}
+
+.como-decirlo {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_024.png");
+    width: 256px;
+    height: 256px;
+}
+
+.i-lan-olvidense-todo {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_025.png");
+    width: 512px;
+    height: 512px;
+}
+
+.esta-complicado-che {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_026.png");
+    width: 256px;
+    height: 256px;
+}
+
+.meli-javi-abriendo-puertas {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_027.png");
+    width: 512px;
+    height: 407px;
+}
+
+.reafirmo-mi-certeza {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_028.png");
+    width: 256px;
+    height: 256px;
+}
+
+.ganen-o-mueren {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_029.png");
+    width: 256px;
+    height: 256px;
+}
+
+.sofi-googleen {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_030.png");
+    width: 256px;
+    height: 256px;
+}
+
+.olvidense-de-todo-pero-no-se-olviden-todo {
+    animation: stickerAnim384 10s linear;
+    background-image: url("../images/sticker_031.png");
+    width: 384px;
+    height: 384px;
+}
+
+.ya-dame-la-maldita-pista {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_032.png");
+    width: 256px;
+    height: 256px;
+}
+
+.joaco-pero-porque-tocas-eso {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_033.png");
+    width: 256px;
+    height: 256px;
+}
+
+.moria-hace-lo-que-se-te-cante {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_034.png");
+    width: 256px;
+    height: 256px;
+}
+
+.meli-mario-de-mierda {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_035.png");
+    width: 256px;
+    height: 256px;
+}
+
+.puede-fallar {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_036.png");
+    width: 256px;
+    height: 256px;
+}
+
+.ron-podia-fallar {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_037.png");
+    width: 256px;
+    height: 256px;
+}
+
+.mario-no-toques {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_038.png");
+    width: 512px;
+    height: 512px;
+}

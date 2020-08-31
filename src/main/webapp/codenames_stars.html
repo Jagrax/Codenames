@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
         <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/stickers.css">
+        <link rel="stylesheet" href="css/stars.css">
 
         <script src="js/socket.io/socket.io.js"></script>
         <script src="js/moment.min.js"></script>
@@ -18,17 +20,23 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     </head>
-    <body class="lite">
+    <body class="h-100">
+        <div class="page-bg"></div>
+
+        <div class="animation-wrapper">
+            <div class="particle particle-1"></div>
+            <div class="particle particle-2"></div>
+            <div class="particle particle-3"></div>
+            <div class="particle particle-4"></div>
+        </div>
+
         <div class="container-fluid page-wrapper">
-            <h4>CODENAMES V1.6</h4>
+            <h4>CODENAMES V1.7</h4>
             <div id="main-carousel" class="carousel slide" style="display:none">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <div class="card container">
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-12">Para ir a la versión original hace <a href="index.html">click acá</a>.</div>
-                                </div>
                                 <div class="form-group row">
                                     <label for="join-nickname" class="col-3 col-form-label col-form-label-sm text-nowrap">Apodo</label>
                                     <div class="col-3">
@@ -179,7 +187,7 @@
                                                 </div>
                                                 <button id="leave-game" type="button" class="btn btn-outline-light">Salir</button>
                                             </div>
-                                            <textarea readonly class="form-control" id="game-log" rows="3">Registro de la partida</textarea>
+                                            <textarea readonly class="form-control mt-2" id="game-log" rows="3">Registro de la partida</textarea>
                                         </div>
                                         <div class="col-7 col-xl-12">
                                             <div class="bg-white rounded p-1">
