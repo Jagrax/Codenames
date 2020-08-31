@@ -57,11 +57,13 @@
                 <groupId>com.heroku.sdk</groupId>
                 <artifactId>heroku-maven-plugin</artifactId>
                 <version>3.0.3</version>
+            <!--
                 <configuration>
                     <processTypes>
                         <web>java $JAVA_OPTS -Dserver.port=$PORT -Dhttp.port=$PORT -cp target/classes:target/dependency/* ar.com.codenames.GameLauncher -port $PORT</web>
                     </processTypes>
                 </configuration>
+            -->
             </plugin>
         </plugins>
     </build>
