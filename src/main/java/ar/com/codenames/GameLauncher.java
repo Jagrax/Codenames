@@ -3,7 +3,6 @@ package ar.com.codenames;
 import ar.com.codenames.entity.Game;
 import ar.com.codenames.entity.Player;
 import ar.com.codenames.entity.Team;
-//import ar.com.dixit.entity.Dixit;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
@@ -305,6 +304,5 @@ public class GameLauncher {
         }
 
         new GameLauncher(hostName, port);
-//        new Dixit();
     }
 }
