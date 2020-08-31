@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -Dserver.port=$PORT -Dhttp.port=$PORT -cp target/classes:target/dependency/* GameLauncher -port $PORT
+web: java $JAVA_OPTS -Dserver.port=$PORT -Dhttp.port=$PORT -cp target/classes:target/dependency/* ar.com.codenames.GameLauncher -port $PORT
