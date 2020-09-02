@@ -288,7 +288,7 @@ function wipeBoard() {
         for (let y = 0; y < boardSize; y++) {
             let button = row.children().eq(y).children().first();
             // button.prop("disabled", false);
-            button.prop("class", "btn btn-block bg-white");
+            button.prop("class", "btn btn-block bg-white tile");
         }
     }
 }
