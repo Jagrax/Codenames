@@ -106,7 +106,7 @@ function drawBoard(board) {
     for (let x = 0; x < board.tiles.length; x++) {
         let tr = $("<tr></tr>").attr("id", "row-" + (x + 1));
         for (let y = 0; y < board.tiles.length; y++) {
-            let btnTile = $("<button class='btn btn-block bg-white'>" + board.tiles[x][y].word + "</button>").on("click", function () {
+            let btnTile = $("<button class='btn btn-block bg-white tile'>" + board.tiles[x][y].word + "</button>").on("click", function () {
                 tileClicked(x, y);
             });
             tr.append($("<td></td>").append(btnTile));

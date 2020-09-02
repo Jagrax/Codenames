@@ -21,11 +21,6 @@ h4 {
   -webkit-text-fill-color: transparent;
 }
 
-.tile {
-    width: 100px;
-    height: 100px;
-}
-
 .table-fixed {
     table-layout: fixed;
 }
@@ -115,4 +110,13 @@ h4 {
 .dropdown-menu {
     max-height: 300px;
     overflow-y: auto;
+}
+
+.btn.bg-white.tile {
+    transition: .5s;
+}
+
+.btn.bg-white.tile:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px #ccc;
 }
