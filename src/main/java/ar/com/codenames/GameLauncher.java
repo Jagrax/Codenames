@@ -230,6 +230,11 @@ public class GameLauncher {
             }
         });
 
+        server.addEventListener("requestGameReport", RequestObject.class, (client, data, ackSender) -> {
+            logEvent(EventType.REQUEST, "requestGameReport", client);
+            client.sendEvent("responseGameReport", game.generateReport());
+        });
+
         server.addEventListener("sendSticker", RequestObject.class, (client, data, ackSender) -> {
             logEvent(EventType.REQUEST, "sendSticker", client);
             server.getBroadcastOperations().sendEvent("stickerResponse", data.getSticker());

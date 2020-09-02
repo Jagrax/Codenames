@@ -1,5 +1,6 @@
 package ar.com.codenames.entity;
 
+import ar.com.codenames.Registro;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import org.json.JSONObject;
@@ -79,6 +80,15 @@ public class Game {
      * Id del equipo que comenzo en la partida anterior
      */
     public Integer startedLastGameTeamId;
+
+    private Registro registroPartidaActual;
+
+    private ArrayList<Registro> registros;
+
+    /**
+     *
+     */
+    public StringBuilder gameReport;
 
     private final Map<String, Set<String>> wordsFilesMap = new HashMap<>();
 
@@ -226,6 +236,9 @@ public class Game {
             this.teams.put(index, teams.get(index));
         }
 
+        registros = new ArrayList<>();
+        gameReport = null;
+
         // Inicializo el juego
         newBoard();
 
@@ -269,6 +282,10 @@ public class Game {
                         winnerId.add(teamId);
                     }
                 }
+                registroPartidaActual.setDeathTileFlipped(true);
+                registroPartidaActual.setWinnerTeamId(winnerId.get(0));
+                registros.add(registroPartidaActual);
+                generateReport();
             } else if (tile.isNeutral()) {
                 switchTurn(); // Switch turn if neutral was flipped
             } else {
@@ -369,6 +386,9 @@ public class Game {
      * </ol>
      */
     public void newBoard() {
+        registroPartidaActual = new Registro();
+        registroPartidaActual.getPlayers().addAll(players);
+
         // Determino que equipo comienza
         randomTurn();
         this.over = false;
@@ -477,6 +497,10 @@ public class Game {
             if (countPendingTiles(teamId) == 0) {
                 over = true;
                 winnerId.add(teamId);
+                registroPartidaActual.setWinnerTeamId(teamId);
+                registroPartidaActual.setDeathTileFlipped(false);
+                registros.add(registroPartidaActual);
+                generateReport();
             }
         }
     }
@@ -561,6 +585,77 @@ public class Game {
                 teamId = 0;
             }
         }
+    }
+
+    public String generateReport() {
+        Map<Integer, Set<Player>> playersByTeam = getPlayersByTeam(registros);
+
+        gameReport = new StringBuilder();
+        String sep = "";
+        for (Integer teamId : playersByTeam.keySet()) {
+            for (Player player : playersByTeam.get(teamId)) {
+                gameReport.append(sep).append(player.getNickname());
+                sep = ",";
+            }
+        }
+
+        for (Registro registro : registros) {
+            gameReport.append("\n");
+            sep = "";
+            for (Integer teamId : playersByTeam.keySet()) {
+                for (Player player : playersByTeam.get(teamId)) {
+                    // Si esta en este Registro, significa que jugo esta partida
+                    if (registro.getPlayers().contains(player)) {
+                        if (player.getTeamId().equals(registro.getWinnerTeamId())) {
+                            gameReport.append(sep).append("+1");
+                        } else {
+                            gameReport.append(sep).append("-1");
+                        }
+                    } else {
+                        gameReport.append(sep).append("N/J");
+                    }
+                    sep = ",";
+                }
+            }
+        }
+
+        return gameReport.toString();
+        /*
+        if (gameReport == null) {
+            gameReport = new StringBuilder();
+            String sep = "";
+            for (Player player : players) {
+                gameReport.append(sep).append(player.getNickname());
+                sep = ",";
+            }
+        }
+
+        gameReport.append("\n");
+
+        sep = "";
+        for (Player player : players) {
+            if (player.getTeamId().equals(winnerId.get(0))) {
+                gameReport.append(sep).append("+1");
+            } else {
+                gameReport.append(sep).append("-1");
+            }
+            sep = ",";
+        }
+        */
+    }
+
+    private Map<Integer, Set<Player>> getPlayersByTeam(ArrayList<Registro> registros) {
+        Map<Integer, Set<Player>> playersByTeam = new HashMap<>();
+        for (Registro registro : registros) {
+            for (Player player : registro.getPlayers()) {
+                // Si no tengo ningun jugador de este equipo, inicializo el Set
+                playersByTeam.computeIfAbsent(player.getTeamId(), k -> new LinkedHashSet<>());
+                // Agrego al jugador al Set del equipo al que corresponde
+                playersByTeam.get(player.getTeamId()).add(player);
+            }
+        }
+
+        return playersByTeam;
     }
 }
 

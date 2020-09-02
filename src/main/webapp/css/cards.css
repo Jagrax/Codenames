@@ -6,7 +6,7 @@ body {
 
 .custom-container {
     position: relative;
-    max-width: 700px;
+    max-width: 1050px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -123,6 +123,13 @@ body {
         top: 110%;
         transform: translateX(-20px) rotate(225deg);
     }
+}
+
+.custom-container .custom-card:nth-child(3) {
+    background-image: url("../images/card_yt_bg.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: auto 420px;
 }
 
 .custom-container .custom-card .custom-circle {

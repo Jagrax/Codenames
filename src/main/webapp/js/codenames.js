@@ -267,6 +267,16 @@ socket.on('serverMsgToLog', function (serverMsgToLog) {
     gameLogTextarea.scrollTop(gameLogTextarea[0].scrollHeight - gameLogTextarea.height());
 });
 
+socket.on('responseGameReport', function (gameReport) {
+    if (gameReport) {
+        let hiddenElement = document.createElement('a');
+        hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(gameReport);
+        hiddenElement.target = '_blank';
+        hiddenElement.download = 'Registro.csv';
+        hiddenElement.click();
+    }
+});
+
 // Utility Functions
 ////////////////////////////////////////////////////////////////////////////
 
