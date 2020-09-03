@@ -113,7 +113,7 @@ h4 {
 }
 
 .btn.bg-white.tile {
-    transition: .5s;
+    transition: .1s;
 }
 
 .btn.bg-white.tile:hover {
