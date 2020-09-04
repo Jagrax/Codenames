@@ -2,23 +2,24 @@ package ar.com.codenames;
 
 import ar.com.codenames.entity.Player;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Registro {
 
-    private ArrayList<Player> players;
+    private Set<Player> players;
     private Integer winnerTeamId;
     private boolean deathTileFlipped;
 
     public Registro() {
-        players = new ArrayList<>();
+        players = new HashSet<>();
     }
 
-    public ArrayList<Player> getPlayers() {
+    public Set<Player> getPlayers() {
         return players;
     }
 
-    public void setPlayers(ArrayList<Player> players) {
+    public void setPlayers(Set<Player> players) {
         this.players = players;
     }
 

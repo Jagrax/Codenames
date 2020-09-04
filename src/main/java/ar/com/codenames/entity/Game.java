@@ -3,6 +3,7 @@ package ar.com.codenames.entity;
 import ar.com.codenames.Registro;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import org.apache.commons.lang3.SerializationUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -387,7 +388,10 @@ public class Game {
      */
     public void newBoard() {
         registroPartidaActual = new Registro();
-        registroPartidaActual.getPlayers().addAll(players);
+        for (Player player : players) {
+            final Integer teamId = player.getTeamId();
+            registroPartidaActual.getPlayers().add(SerializationUtils.clone(player));
+        }
 
         // Determino que equipo comienza
         randomTurn();
@@ -588,13 +592,13 @@ public class Game {
     }
 
     public String generateReport() {
-        Map<Integer, Set<Player>> playersByTeam = getPlayersByTeam(registros);
+        Map<Integer, Set<Player>> playersByTeam = getPlayersByTeam();
 
         gameReport = new StringBuilder();
         String sep = "";
         for (Integer teamId : playersByTeam.keySet()) {
             for (Player player : playersByTeam.get(teamId)) {
-                gameReport.append(sep).append(player.getNickname());
+                gameReport.append(sep).append(player.getNickname()).append("(").append(teams.get(player.getTeamId()).getName()).append(")");
                 sep = ",";
             }
         }
@@ -604,9 +608,13 @@ public class Game {
             sep = "";
             for (Integer teamId : playersByTeam.keySet()) {
                 for (Player player : playersByTeam.get(teamId)) {
-                    // Si esta en este Registro, significa que jugo esta partida
-                    if (registro.getPlayers().contains(player)) {
-                        if (player.getTeamId().equals(registro.getWinnerTeamId())) {
+                    // Si esta en este Registro, significa que estuvo conectado durante esta partida
+                    Player playerInCurrentRegistry = getPlayerInSet(registro.getPlayers(), player);
+                    if (playerInCurrentRegistry != null) {
+                        // Si el jugadora actual estuvo en otro equipo durante esa partida, le pongo una marca de "O/E"
+                        if (!playerInCurrentRegistry.getTeamId().equals(player.getTeamId())) {
+                            gameReport.append(sep).append("O/E");
+                        } else if (player.getTeamId().equals(registro.getWinnerTeamId())) {
                             gameReport.append(sep).append("+1");
                         } else {
                             gameReport.append(sep).append("-1");
@@ -618,6 +626,8 @@ public class Game {
                 }
             }
         }
+
+        log.info(gameReport.toString());
 
         return gameReport.toString();
         /*
@@ -644,7 +654,16 @@ public class Game {
         */
     }
 
-    private Map<Integer, Set<Player>> getPlayersByTeam(ArrayList<Registro> registros) {
+    private Player getPlayerInSet(Set<Player> sourcePlayers, Player playerToFind) {
+        if (sourcePlayers != null && !sourcePlayers.isEmpty()) {
+            for (Player sourcePlayer : sourcePlayers) {
+                if (sourcePlayer.equals(playerToFind)) return sourcePlayer;
+            }
+        }
+        return null;
+    }
+
+    private Map<Integer, Set<Player>> getPlayersByTeam() {
         Map<Integer, Set<Player>> playersByTeam = new HashMap<>();
         for (Registro registro : registros) {
             for (Player player : registro.getPlayers()) {

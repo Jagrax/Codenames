@@ -2,7 +2,10 @@ package ar.com.codenames.entity;
 
 import com.corundumstudio.socketio.SocketIOClient;
 
-public class Player {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Player implements Serializable {
 
     private String id;
     private String nickname;
@@ -59,5 +62,18 @@ public class Player {
                 + ((teamId != null) ? "teamId=" + teamId + ", " : "")
                 + ((role != null) ? "role=" + role : "")
                 + "]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return id.equals(player.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
