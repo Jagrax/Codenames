@@ -258,7 +258,7 @@
     height: 256px;
 }
 
-.puede-fallar {
+.sirius-puede-fallar {
     animation: stickerAnim256 10s linear;
     background-image: url("../images/sticker_036.png");
     width: 256px;
