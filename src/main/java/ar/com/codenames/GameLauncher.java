@@ -80,7 +80,7 @@ public class GameLauncher {
                     if (data.getWordsPacksSelected() != null && !data.getWordsPacksSelected().isEmpty()) {
                         if (validateWords(data.getBoardSize(), data.getTeamColors().size(), data.getWordsByTeam())) {
                             // Agrego al jugador que creo el juego
-                            game.addPlayer(new Player(client, data.getExcelname(), data.getNickname()));
+                            game.addPlayer(new Player(client, data.getExcelName(), data.getNickname()));
 
                             // Creo los teams
                             ArrayList<Team> teams = new ArrayList<>();
@@ -136,7 +136,7 @@ public class GameLauncher {
                     success = false;
                     msg = "Ya hay un jugador con ese nickname";
                 } else {
-                    game.addPlayer(new Player(client, data.getExcelname(), nickname));
+                    game.addPlayer(new Player(client, data.getExcelName(), nickname));
                 }
             } else {
                 success = false;
