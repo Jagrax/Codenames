@@ -6,7 +6,7 @@ body {
 
 .custom-container {
     position: relative;
-    max-width: 1050px;
+    max-width: 1450px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -153,4 +153,11 @@ body {
     filter: blur(0px);
     transform: scale(1.1);
     opacity: 1;
+}
+
+.custom-container .custom-card:nth-child(4) {
+    background: radial-gradient(#333, #000);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

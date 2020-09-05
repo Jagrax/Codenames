@@ -25,7 +25,9 @@ public class GameLauncher {
             new AbstractMap.SimpleEntry<>("Azul", "primary"),
             new AbstractMap.SimpleEntry<>("Verde", "success"),
             new AbstractMap.SimpleEntry<>("Amarillo", "warning"),
-            new AbstractMap.SimpleEntry<>("Cyan", "info"))
+            new AbstractMap.SimpleEntry<>("Cyan", "info"),
+            new AbstractMap.SimpleEntry<>("Gryffindor", "danger"),
+            new AbstractMap.SimpleEntry<>("Slytherin", "success"))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     private final SocketIOServer server;
     private final Game game = new Game();
