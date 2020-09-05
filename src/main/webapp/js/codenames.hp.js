@@ -1,4 +1,5 @@
-const socket = io('http://pacific-badlands-39971.herokuapp.com'); // Connect to server
+// const socket = io('http://pacific-badlands-39971.herokuapp.com'); // Connect to server
+const socket = io("http://localhost:9093");
 
 let animationWrapper = $('.animation-wrapper');
 let mainCarousel = $('.carousel');
@@ -366,7 +367,7 @@ function updatePlayerlist(players, teams) {
         let teamTable = $('#team-table-' + i);
         if (teamTable.length === 0) {
             teamTable = $("<table class='w-100'></table>").attr("id", "team-table-" + i);
-            let btnTile = $("<img style='cursor:pointer;max-height:150px' class='img-fluid' src='images/" + teams[i].name + "_Pottermore.png' title='Unirse a " + teams[i].name + "'/>").on("click", function () {
+            let btnTile = $("<img style='cursor:pointer;max-height:150px' class='img-fluid' src='images/team-" + teams[i].name + "-logo.png' title='Unirse a " + teams[i].name + "' alt='team-" + teams[i].name + "-logo'/>").on("click", function () {
                 socket.emit('joinTeam', {teamId: i});
             });
             teamTable.append($("<thead></thead>").append($("<tr></tr>").append($("<td class='text-center'></td>").append(btnTile))));

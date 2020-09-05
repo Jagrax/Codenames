@@ -33,96 +33,51 @@
                             <div class="card container">
                                 <div class="card-body">
                                     <div class="form-group row">
-                                        <label for="join-nickname" class="col-3 col-form-label col-form-label-sm text-nowrap">Apodo</label>
-                                        <div class="col-3">
-                                            <input id="join-nickname" type="text" class="form-control form-control-sm"/>
+                                        <label for="excel-name" class="col-12 col-md-2 col-form-label col-form-label-sm text-nowrap">Nombre en el excel</label>
+                                        <div class="col-12 col-md-4">
+                                            <input id="excel-name" type="text" class="form-control form-control-sm"/>
                                         </div>
-                                        <div class="col-6"><button type="button" class="btn btn-sm btn-block btn-success" id="join-enter">Unirse a partida</button></div>
-                                        <label for="boardSize" class="col-3 col-form-label col-form-label-sm text-nowrap" config-field>Tamaño del tablero</label>
-                                        <div class="col-3" config-field>
-                                            <input id="boardSize" type="number" min="3" max="6" class="form-control form-control-sm" value="5"/>
+                                        <label for="join-nickname" class="col-12 col-md-2 col-form-label col-form-label-sm text-nowrap">Apodo</label>
+                                        <div class="col-12 col-md-4">
+                                            <div class="input-group">
+                                                <input id="join-nickname" type="text" class="form-control form-control-sm"/>
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-sm btn-block btn-success" id="join-enter">Unirse a partida</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group row" config-field>
-                                        <label for="turnDuration" class="col-3 col-form-label col-form-label-sm text-nowrap">Duración de cada turno</label>
-                                        <div class="col-3">
-                                            <input id="turnDuration" type="number" min="30" max="240" class="form-control form-control-sm" value="60"/>
-                                        </div>
-                                        <label for="wordsByTeam" class="col-3 col-form-label col-form-label-sm text-nowrap">Palabras por equipo</label>
-                                        <div class="col-3">
-                                            <input id="wordsByTeam" type="number" min="1" max="36" class="form-control form-control-sm" value="8"/>
-                                        </div>
-                                    </div>
-                                    <div class="row" config-field>
-                                        <div class="col-6">
-                                            <div class="form-group row">
-                                                <label for="team-1-color" class="col-6 col-form-label col-form-label-sm text-nowrap">Equipo #1</label>
-                                                <div class="col-6">
-                                                    <select id="team-1-color" class="form-control form-control-sm">
-                                                        <option selected>Rojo</option>
-                                                        <option>Azul</option>
-                                                        <option>Verde</option>
-                                                        <option>Amarillo</option>
-                                                        <option>Cyan</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="team-2-color" class="col-6 col-form-label col-form-label-sm text-nowrap">Equipo #2</label>
-                                                <div class="col-6">
-                                                    <select id="team-2-color" class="form-control form-control-sm">
-                                                        <option>Rojo</option>
-                                                        <option selected>Azul</option>
-                                                        <option>Verde</option>
-                                                        <option>Amarillo</option>
-                                                        <option>Cyan</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="team-3-color" class="col-6 col-form-label col-form-label-sm text-nowrap">Equipo #3</label>
-                                                <div class="col-6">
-                                                    <select id="team-3-color" class="form-control form-control-sm">
-                                                        <option selected></option>
-                                                        <option>Rojo</option>
-                                                        <option>Azul</option>
-                                                        <option>Verde</option>
-                                                        <option>Amarillo</option>
-                                                        <option>Cyan</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="team-4-color" class="col-6 col-form-label col-form-label-sm text-nowrap">Equipo #4</label>
-                                                <div class="col-6">
-                                                    <select id="team-4-color" class="form-control form-control-sm">
-                                                        <option selected></option>
-                                                        <option>Rojo</option>
-                                                        <option>Azul</option>
-                                                        <option>Verde</option>
-                                                        <option>Amarillo</option>
-                                                        <option>Cyan</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-6">
-                                            <label for="words-packs">Packs de palabras para jugar</label>
-                                            <select multiple class="form-control form-control-sm" id="words-packs"></select>
-                                        </div>
-                                    </div>
-                                    <div class="row" config-field>
-                                        <label for="team-5-color" class="col-3 col-form-label col-form-label-sm text-nowrap">Equipo #5</label>
-                                        <div class="col-3">
-                                            <select id="team-5-color" class="form-control form-control-sm">
-                                                <option selected></option>
-                                                <option>Rojo</option>
+                                        <label for="team-1-color" class="col-12 col-md-2 col-form-label col-form-label-sm text-nowrap">Equipo #1</label>
+                                        <div class="col-12 col-md-4">
+                                            <select id="team-1-color" class="form-control form-control-sm">
+                                                <option selected>Rojo</option>
                                                 <option>Azul</option>
                                                 <option>Verde</option>
                                                 <option>Amarillo</option>
                                                 <option>Cyan</option>
                                             </select>
+                                        </div>
+                                        <label for="team-2-color" class="col-12 col-md-2 col-form-label col-form-label-sm text-nowrap">Equipo #2</label>
+                                        <div class="col-12 col-md-4">
+                                            <select id="team-2-color" class="form-control form-control-sm">
+                                                <option>Rojo</option>
+                                                <option selected>Azul</option>
+                                                <option>Verde</option>
+                                                <option>Amarillo</option>
+                                                <option>Cyan</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" config-field>
+                                        <div class="col-12">
+                                            <label for="words-packs">Packs de palabras para jugar</label>
+                                            <select multiple class="form-control form-control-sm" id="words-packs"></select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6" config-field>
+                                            <button class="btn btn-sm btn-block btn-dark" type="button" data-toggle="modal" data-target="#dlgGameConfig">Configuración avanzada</button>
                                         </div>
                                         <div class="col-6">
                                             <button type="button" class="btn btn-sm btn-block btn-success" id="join-create" style="display: none" disabled>Crear partida</button>
@@ -261,17 +216,84 @@
                 </div>
             </div>
         </div>
-
-        <script src="js/codenames.js"></script>
-        <script>
-            let txtYouTubeVideoId = $("#txtYouTubeVideoId");
-            let iframeBackgroundVideo = $("#backgroundVideo");
-            function updateBackgroundVideo() {
-                let src = "https://www.youtube.com/embed/" + txtYouTubeVideoId.val() + "?controls=0&autoplay=1&mute=1";
-                iframeBackgroundVideo.attr("src", src);
-            }
-            updateBackgroundVideo();
-        </script>
     </div>
+
+    <div class="modal fade" id="dlgGameConfig" tabindex="-1" aria-labelledby="dlgGameConfigLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dlgGameConfigLabel">Configuración avanzada</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="boardSize" class="col-3 col-form-label col-form-label-sm text-nowrap">Tamaño del tablero</label>
+                        <div class="col-3">
+                            <input id="boardSize" type="number" min="3" max="6" class="form-control form-control-sm" value="5"/>
+                        </div>
+                        <label for="team-3-color" class="col-3 col-form-label col-form-label-sm text-nowrap">Equipo #3</label>
+                        <div class="col-3">
+                            <select id="team-3-color" class="form-control form-control-sm">
+                                <option selected></option>
+                                <option>Rojo</option>
+                                <option>Azul</option>
+                                <option>Verde</option>
+                                <option>Amarillo</option>
+                                <option>Cyan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="turnDuration" class="col-3 col-form-label col-form-label-sm text-nowrap">Duración de cada turno</label>
+                        <div class="col-3">
+                            <input id="turnDuration" type="number" min="30" max="240" class="form-control form-control-sm" value="60"/>
+                        </div>
+                        <label for="team-4-color" class="col-3 col-form-label col-form-label-sm text-nowrap">Equipo #4</label>
+                        <div class="col-3">
+                            <select id="team-4-color" class="form-control form-control-sm">
+                                <option selected></option>
+                                <option>Rojo</option>
+                                <option>Azul</option>
+                                <option>Verde</option>
+                                <option>Amarillo</option>
+                                <option>Cyan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="wordsByTeam" class="col-3 col-form-label col-form-label-sm text-nowrap">Palabras por equipo</label>
+                        <div class="col-3">
+                            <input id="wordsByTeam" type="number" min="1" max="36" class="form-control form-control-sm" value="8"/>
+                        </div>
+                        <label for="team-5-color" class="col-3 col-form-label col-form-label-sm text-nowrap">Equipo #5</label>
+                        <div class="col-3">
+                            <select id="team-5-color" class="form-control form-control-sm">
+                                <option selected></option>
+                                <option>Rojo</option>
+                                <option>Azul</option>
+                                <option>Verde</option>
+                                <option>Amarillo</option>
+                                <option>Cyan</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/codenames.js"></script>
+    <script>
+        let txtYouTubeVideoId = $("#txtYouTubeVideoId");
+        let iframeBackgroundVideo = $("#backgroundVideo");
+        function updateBackgroundVideo() {
+            let src = "https://www.youtube.com/embed/" + txtYouTubeVideoId.val() + "?controls=0&autoplay=1&mute=1";
+            iframeBackgroundVideo.attr("src", src);
+        }
+        updateBackgroundVideo();
+    </script>
 </body>
 </html>
