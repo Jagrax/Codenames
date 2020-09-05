@@ -10,6 +10,7 @@ let myTeamId;
 let joinErrorMessage = $('#error-message');
 let formFirstRow = $('.form-group.row').first();
 // Input Fields
+let excelName = $('#excel-name');
 let nickname = $('#join-nickname');
 let boardSize = $('#boardSize');
 let wordsByTeam = $('#wordsByTeam');
@@ -130,7 +131,7 @@ function getTeamsSize(teamsMap) {
 ////////////////////////////////////////////////////////////////////////////
 // User Joins Game
 joinGame.on("click", function () {
-    socket.emit('joinGame', {nickname: nickname.val()});
+    socket.emit('joinGame', {excelName: excelName.val(), nickname: nickname.val()});
 });
 
 // User Creates Game
@@ -141,7 +142,7 @@ joinCreate.on("click", function () {
     if (team3color.val()) teamColors.push(team3color.val());
     if (team4color.val()) teamColors.push(team4color.val());
     if (team5color.val()) teamColors.push(team5color.val());
-    socket.emit('createGame', {nickname: nickname.val(), boardSize: boardSize.val(), wordsByTeam: wordsByTeam.val(), turnDuration: turnDuration.val(), teamColors: teamColors, wordsPacksSelected: wordsPacks.val()});
+    socket.emit('createGame', {excelName: excelName.val(), nickname: nickname.val(), boardSize: boardSize.val(), wordsByTeam: wordsByTeam.val(), turnDuration: turnDuration.val(), teamColors: teamColors, wordsPacksSelected: wordsPacks.val()});
 });
 
 // User Leaves Room

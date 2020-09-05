@@ -8,6 +8,7 @@ import java.util.Objects;
 public class Player implements Serializable {
 
     private String id;
+    private String excelname;
     private String nickname;
     private Integer teamId;
     private Role role;
@@ -16,8 +17,9 @@ public class Player implements Serializable {
         GUESSER, SPYMASTER
     }
 
-    public Player(SocketIOClient client, String nickname) {
+    public Player(SocketIOClient client, String excelname, String nickname) {
         this.id = client.getSessionId().toString();
+        this.excelname = excelname;
         this.nickname = nickname;
         this.role = Role.GUESSER;
     }
@@ -28,6 +30,14 @@ public class Player implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getExcelname() {
+        return excelname;
+    }
+
+    public void setExcelname(String excelname) {
+        this.excelname = excelname;
     }
 
     public String getNickname() {
@@ -58,6 +68,7 @@ public class Player implements Serializable {
     public String toString() {
         return "Player ["
                 + ((id != null) ? "id=" + id + ", " : "")
+                + ((excelname != null) ? "excelname=" + excelname + ", " : "")
                 + ((nickname != null) ? "nickname=" + nickname + ", " : "")
                 + ((teamId != null) ? "teamId=" + teamId + ", " : "")
                 + ((role != null) ? "role=" + role : "")
@@ -69,11 +80,11 @@ public class Player implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return id.equals(player.id);
+        return Objects.equals(excelname, player.excelname);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(excelname);
     }
 }

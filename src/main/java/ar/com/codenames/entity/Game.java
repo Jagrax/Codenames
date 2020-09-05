@@ -598,7 +598,7 @@ public class Game {
         String sep = "";
         for (Integer teamId : playersByTeam.keySet()) {
             for (Player player : playersByTeam.get(teamId)) {
-                gameReport.append(sep).append(player.getNickname()).append("(").append(teams.get(player.getTeamId()).getName()).append(")");
+                gameReport.append(sep).append(player.getExcelname()).append("(").append(teams.get(player.getTeamId()).getName()).append(")");
                 sep = ",";
             }
         }

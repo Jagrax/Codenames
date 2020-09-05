@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class RequestObject {
 
+    private String excelname;
     private String nickname;
     private String message;
     private int boardSize;
@@ -20,6 +21,14 @@ public class RequestObject {
     private String sticker;
 
     public RequestObject() {
+    }
+
+    public String getExcelname() {
+        return excelname;
+    }
+
+    public void setExcelname(String excelname) {
+        this.excelname = excelname;
     }
 
     public String getNickname() {
