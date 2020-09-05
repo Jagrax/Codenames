@@ -299,3 +299,31 @@
     width: 256px;
     height: 256px;
 }
+
+.tobi-ah-se-les-agrego-tiempo {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_042.png");
+    width: 256px;
+    height: 256px;
+}
+
+.lau-listo-o-te-quedo-alguna-palabra {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_043.png");
+    width: 512px;
+    height: 512px;
+}
+
+.tobi-pista-antes-de-los-diez {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_044.png");
+    width: 512px;
+    height: 512px;
+}
+
+.en-un-cumpleañito {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_045.png");
+    width: 256px;
+    height: 256px;
+}
