@@ -283,6 +283,9 @@ public class Game {
                         winnerId.add(teamId);
                     }
                 }
+                for (Player player : players) {
+                    registroPartidaActual.getPlayers().add(SerializationUtils.clone(player));
+                }
                 registroPartidaActual.setDeathTileFlipped(true);
                 registroPartidaActual.setWinnerTeamId(winnerId.get(0));
                 registros.add(registroPartidaActual);
@@ -388,10 +391,6 @@ public class Game {
      */
     public void newBoard() {
         registroPartidaActual = new Registro();
-        for (Player player : players) {
-            final Integer teamId = player.getTeamId();
-            registroPartidaActual.getPlayers().add(SerializationUtils.clone(player));
-        }
 
         // Determino que equipo comienza
         randomTurn();
@@ -501,6 +500,9 @@ public class Game {
             if (countPendingTiles(teamId) == 0) {
                 over = true;
                 winnerId.add(teamId);
+                for (Player player : players) {
+                    registroPartidaActual.getPlayers().add(SerializationUtils.clone(player));
+                }
                 registroPartidaActual.setWinnerTeamId(teamId);
                 registroPartidaActual.setDeathTileFlipped(false);
                 registros.add(registroPartidaActual);
@@ -629,6 +631,110 @@ public class Game {
 
         log.info(gameReport.toString());
 
+        return gameReport.toString();
+        /*
+        if (gameReport == null) {
+            gameReport = new StringBuilder();
+            String sep = "";
+            for (Player player : players) {
+                gameReport.append(sep).append(player.getNickname());
+                sep = ",";
+            }
+        }
+
+        gameReport.append("\n");
+
+        sep = "";
+        for (Player player : players) {
+            if (player.getTeamId().equals(winnerId.get(0))) {
+                gameReport.append(sep).append("+1");
+            } else {
+                gameReport.append(sep).append("-1");
+            }
+            sep = ",";
+        }
+        */
+    }
+
+    public String generateReportHtml() {
+        Map<Integer, Set<Player>> playersByTeam = getPlayersByTeam();
+
+        Set<Player> allPlayers = new TreeSet<>();
+        for (Registro registro : registros) allPlayers.addAll(registro.getPlayers());
+
+        gameReport = new StringBuilder("<table class='table table-sm table-bordered'><thead class='thead-dark'><tr>");
+        gameReport.append("<th scope='col'>Jugadores</th><th scope='col'>Ganadas</th><th scope='col'>Perdidas</th><th scope='col'>Balance</th>");
+        gameReport.append("</tr></thead><tbody>");
+
+        Map<Player, Integer> ganadas = new HashMap<>();
+        Map<Player, Integer> perdidas = new HashMap<>();
+        for (Registro registro : registros) {
+//            gameReport.append("\n");
+//            sep = "";
+            for (Integer teamId : playersByTeam.keySet()) {
+                for (Player player : playersByTeam.get(teamId)) {
+                    ganadas.putIfAbsent(player, 0);
+                    perdidas.putIfAbsent(player, 0);
+                    // Si esta en este Registro, significa que estuvo conectado durante esta partida
+                    Player playerInCurrentRegistry = getPlayerInSet(registro.getPlayers(), player);
+                    if (playerInCurrentRegistry != null) {
+                        // Si el jugadora actual estuvo en otro equipo durante esa partida, le pongo una marca de "O/E"
+                        if (!playerInCurrentRegistry.getTeamId().equals(player.getTeamId())) {
+//                            gameReport.append(sep).append("O/E");
+                        } else if (player.getTeamId().equals(registro.getWinnerTeamId())) {
+                            Integer contGanadas = ganadas.get(player);
+                            ganadas.put(player, ++contGanadas);
+                        } else {
+                            Integer cantPerdidas = perdidas.get(player);
+                            perdidas.put(player, ++cantPerdidas);
+                        }
+                    } else {
+//                        gameReport.append(sep).append("N/J");
+                    }
+//                    sep = ",";
+                }
+            }
+        }
+        for (Player player : allPlayers) {
+            gameReport.append("<tr><td>").append(player.getExcelname()).append("</td><td>").append(ganadas.get(player)).append("</td><td>").append(perdidas.get(player)).append("</td><td>").append(ganadas.get(player) - perdidas.get(player)).append("</td></tr>");
+        }
+        gameReport.append("</tbody></table>");
+
+        /*
+        String sep = "";
+        for (Integer teamId : playersByTeam.keySet()) {
+            for (Player player : playersByTeam.get(teamId)) {
+                gameReport.append("<td>").append(player.getExcelname()).append("(").append(teams.get(player.getTeamId()).getName()).append(")");
+                sep = ",";
+            }
+        }
+
+        for (Registro registro : registros) {
+            gameReport.append("\n");
+            sep = "";
+            for (Integer teamId : playersByTeam.keySet()) {
+                for (Player player : playersByTeam.get(teamId)) {
+                    // Si esta en este Registro, significa que estuvo conectado durante esta partida
+                    Player playerInCurrentRegistry = getPlayerInSet(registro.getPlayers(), player);
+                    if (playerInCurrentRegistry != null) {
+                        // Si el jugadora actual estuvo en otro equipo durante esa partida, le pongo una marca de "O/E"
+                        if (!playerInCurrentRegistry.getTeamId().equals(player.getTeamId())) {
+                            gameReport.append(sep).append("O/E");
+                        } else if (player.getTeamId().equals(registro.getWinnerTeamId())) {
+                            gameReport.append(sep).append("+1");
+                        } else {
+                            gameReport.append(sep).append("-1");
+                        }
+                    } else {
+                        gameReport.append(sep).append("N/J");
+                    }
+                    sep = ",";
+                }
+            }
+        }
+
+        log.info(gameReport.toString());
+*/
         return gameReport.toString();
         /*
         if (gameReport == null) {

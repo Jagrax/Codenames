@@ -5,13 +5,18 @@ import com.corundumstudio.socketio.SocketIOClient;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Player implements Serializable {
+public class Player implements Serializable, Comparable<Player> {
 
     private String id;
     private String excelname;
     private String nickname;
     private Integer teamId;
     private Role role;
+
+    @Override
+    public int compareTo(Player o) {
+        return this.excelname.compareTo(o.excelname);
+    }
 
     public enum Role {
         GUESSER, SPYMASTER

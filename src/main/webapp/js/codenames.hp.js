@@ -32,10 +32,12 @@ let leaveGame = $('#leave-game');
 let gameBoard = $('#game-board');
 let teamsTables = $('#teams-tables');
 let gameLogTextarea = $('#game-log');
+let dlgGameStatistics = $('#dlgGameStatistics');
 // Buttons
 let randomizeTeams = $('#randomize-teams');
 let endTurn = $('#end-turn');
 let newGame = $('#new-game');
+let reqGameStatistics = $('#reqGameStatistics');
 let switchRole = $('#role-spymaster');
 // UI Elements
 let turnMessage = $('#status');
@@ -178,6 +180,10 @@ function sendSticker(stickerName) {
     socket.emit('sendSticker', {sticker: stickerName});
 }
 
+reqGameStatistics.on("click", function () {
+    socket.emit('requestGameReportHtml', {});
+});
+
 // Server Responses to this client
 ////////////////////////////////////////////////////////////////////////////
 // Response to joining game
@@ -275,6 +281,13 @@ socket.on('responseGameReport', function (gameReport) {
         hiddenElement.target = '_blank';
         hiddenElement.download = 'Registro.csv';
         hiddenElement.click();
+    }
+});
+
+socket.on('responseGameReportHtml', function (gameReportHtml) {
+    if (gameReportHtml) {
+        dlgGameStatistics.find("div.modal-body").html(gameReportHtml);
+        dlgGameStatistics.modal('show');
     }
 });
 
