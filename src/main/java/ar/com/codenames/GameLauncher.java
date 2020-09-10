@@ -228,7 +228,7 @@ public class GameLauncher {
             // - Tengo que ser adivino (guesser)
             // - Tiene que ser mi turno
             // - Y la ficha a voltear no tiene que estar ya volteada (esto lo hace la clase Game)
-            if (!game.isOver() && player.getRole().equals(Player.Role.GUESSER) && game.getTurnId().equals(player.getTeamId()) && game.flipTile(data.getX(), data.getY())) {
+            if (!game.isOver() && player.getRole().equals(Player.Role.GUESSER) && game.getTurnId().equals(player.getTeamId()) && game.flipTile(data.getX(), data.getY(), player)) {
                 server.getBroadcastOperations().sendEvent("serverMsgToLog", game.getPlayer(client).getNickname() + " ha tocado la palabra " + game.getBoard().getTile(data.getX(), data.getY()).getWord());
                 gameUpdate();
             }

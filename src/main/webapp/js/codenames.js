@@ -39,6 +39,7 @@ let endTurn = $('#end-turn');
 let newGame = $('#new-game');
 let reqGameStatistics = $('#reqGameStatistics');
 let switchRole = $('#role-spymaster');
+let searchStickerInput = $('#searchSticker');
 // UI Elements
 let turnMessage = $('#status');
 let timer = $('#timer');
@@ -403,3 +404,99 @@ function updatePlayerlist(players, teams) {
         $('#team-table-' + playerTeamId).find("tbody").append($("<tr></tr>").append($('<td></td>').text(text)));
     }
 }
+
+let stickers = [];
+stickers.push({onclick : 'tienen-un-chat-paralelo', text : 'Gasti: -Tienen un chat paralelo', keys : 'GASTON, GASTI, CHAT, PARALELO'});
+stickers.push({onclick : 'van-a-tener-que-pensar', text : 'Mario: -Van a tener que pensar', keys : ''});
+stickers.push({onclick : 'a-ver-mario-tira-un-x4', text : 'Mario: -A ver Mario, tira un X4', keys : ''});
+stickers.push({onclick : 'mario-hace-trampa', text : 'Mario: -Hacer trampa', keys : ''});
+stickers.push({onclick : 'entendiendonos-mucho', text : 'Pamkard: -Entendiendonos mucho...', keys : ''});
+stickers.push({onclick : 'tratando-de-entender-a-mario', text : 'Sofi: -Tratando de entender a Mario', keys : ''});
+stickers.push({onclick : 'ok-sofi', text : 'Ok Sofi!', keys : ''});
+stickers.push({onclick : 'no-se-puede-jugar-con-todos-gritando', text : 'Martín: -no se puede jugar con todos gritando', keys : ''});
+stickers.push({onclick : 'no-vamos-a-pensar', text : 'Martín: -NO, vamos a pensar', keys : ''});
+stickers.push({onclick : 'no-no-no-estan-haciendo-trampa', text : 'Martín: -NO NO NO, están haciendo trampa', keys : ''});
+stickers.push({onclick : 'martin-hace-trampa', text : 'Martin: -Hacer trampa', keys : ''});
+stickers.push({onclick : 'amor', text : 'Martín: -AMOR', keys : ''});
+stickers.push({onclick : 'que-complejo-che', text : 'Martín: -Que complejo che, que complejo', keys : ''});
+stickers.push({onclick : 'vamo-a-melinear', text : 'Meli: -Vamo a melinear', keys : ''});
+stickers.push({onclick : 'wat', text : 'Meli: -Wat', keys : ''});
+stickers.push({onclick : 'perdon-no-lei', text : 'Meli: -Perdón, no leí', keys : ''});
+stickers.push({onclick : 'mmmmm', text : 'Meli: -Mmmmm', keys : ''});
+stickers.push({onclick : 'vos-tenes-que-sentir-el-juego', text : 'Javi: -Vos tenes que sentir el juego', keys : ''});
+stickers.push({onclick : 'se-viene-la-negra', text : 'Javi: -Se viene la negra', keys : ''});
+stickers.push({onclick : 'nene', text : 'Nene', keys : ''});
+stickers.push({onclick : 'muy-buena-la-pista-super-clara-che', text : 'Anita: -Muy buena la pista, super clara che', keys : ''});
+stickers.push({onclick : 'puluu-olvidense-todo', text : 'Puluu: -Olvídense todo', keys : ''});
+stickers.push({onclick : 'pensa-como-mario', text : 'Pensá como Mario', keys : ''});
+stickers.push({onclick : 'como-decirlo', text : 'Martín: -Cómo decirlo', keys : ''});
+stickers.push({onclick : 'i-lan-olvidense-todo', text : 'I Lan: -Olvídense todo', keys : ''});
+stickers.push({onclick : 'meli-javi-abriendo-puertas', text : 'Meli y Javi: -Abriendo puertas', keys : ''});
+stickers.push({onclick : 'esta-complicado-che', text : 'Martín: -Está complicado che', keys : ''});
+stickers.push({onclick : 'reafirmo-mi-certeza', text : 'Respeto tu duda...pero reafirmo mi certeza tocando de todos modos', keys : ''});
+stickers.push({onclick : 'ganen-o-mueren', text : 'Ganen o mueren', keys : ''});
+stickers.push({onclick : 'sofi-googleen', text : 'Sofi: -Googleen', keys : ''});
+stickers.push({onclick : 'olvidense-de-todo-pero-no-se-olviden-todo', text : 'Olvidense de todo...pero no se olviden de todo', keys : ''});
+stickers.push({onclick : 'ya-dame-la-maldita-pista', text : 'Ya dame la maldita pista', keys : ''});
+stickers.push({onclick : 'joaco-pero-porque-tocas-eso', text : 'Joaco: Pero porqué tocas eso?!', keys : ''});
+stickers.push({onclick : 'moria-hace-lo-que-se-te-cante', text : 'Moria: Bueno mamita, hacé lo que se te cante', keys : ''});
+stickers.push({onclick : 'meli-mario-de-mierda', text : 'Meli: Mario de mierda', keys : ''});
+stickers.push({onclick : 'mario-no-toques', text : 'Mario no toques', keys : ''});
+stickers.push({onclick : 'puluu-podia-fallar', text : 'Puluu: -Podía fallar', keys : ''});
+stickers.push({onclick : 'mario-a-ver-puede-fallar', text : 'Mario: -A ver...puede fallar', keys : ''});
+stickers.push({onclick : 'javi-yo-no-fui', text : 'Javi: -Yo no fui', keys : ''});
+stickers.push({onclick : 'sirius-puede-fallar', text : 'Sirius: -Puede fallar', keys : ''});
+stickers.push({onclick : 'ron-podia-fallar', text : 'Ron: -Podia fallar', keys : ''});
+stickers.push({onclick : 'tobi-ah-se-les-agrego-tiempo', text : 'Tobi: -Ah, se les agregó tiempo?', keys : ''});
+stickers.push({onclick : 'lau-listo-o-te-quedo-alguna-palabra', text : 'Lau: -Listo? O te quedó alguna palabra por decir en la pista?', keys : ''});
+stickers.push({onclick : 'tobi-pista-antes-de-los-diez', text : 'Tobi: -En algun universo me das la pista antes de los 10"?', keys : ''});
+stickers.push({onclick : 'en-un-cumpleañito', text : 'En un cumpleañito', keys : ''});
+
+function buildDropdown(value) {
+    let contents = [];
+    for (let sticker = 0; sticker < value.length; sticker++) {
+        contents.push('<input type="button" class="dropdown-item" onclick="sendSticker(\'' + value[sticker].onclick + '\')" value="' + value[sticker].text + '"/>');
+    }
+    $('#menuItems').append(contents.join(""));
+
+    //Hide the row that shows no items were found
+    $('#empty').hide();
+}
+
+//Capture the event when user types into the search box
+searchStickerInput.keyup(function () {
+    filter($(this).val().trim());
+});
+
+let items = $('.dropdown-item');
+
+//For every word entered by the user, check if the symbol starts with that word
+//If it does show the symbol, else hide it
+function filter(word) {
+    if (items.length === 0) items = $('.dropdown-item');
+    let length = items.length;
+    let hidden = 0;
+    for (let i = 0; i < length; i++) {
+        let btnSticker = $(items.get(i));
+        if (btnSticker.val().toUpperCase().includes(word.toUpperCase())) {
+            btnSticker.show();
+        } else {
+            btnSticker.hide();
+            hidden++;
+        }
+    }
+
+    //If all items are hidden, show the empty view
+    if (hidden === length) {
+        $('#empty').show();
+    } else {
+        $('#empty').hide();
+    }
+}
+
+//If the user clicks on any item, set the title of the button as the text of the item
+$('#menuItems').on('click', '.dropdown-item', function(){
+    $("#dropdownMenuButton").dropdown('toggle');
+})
+
+buildDropdown(stickers);

@@ -10,6 +10,7 @@ public class Registro {
     private Set<Player> players;
     private Integer winnerTeamId;
     private boolean deathTileFlipped;
+    private Player playerWhoTouchedDeathTile;
 
     public Registro() {
         players = new HashSet<>();
@@ -37,5 +38,13 @@ public class Registro {
 
     public void setDeathTileFlipped(boolean deathTileFlipped) {
         this.deathTileFlipped = deathTileFlipped;
+    }
+
+    public Player getPlayerWhoTouchedDeathTile() {
+        return playerWhoTouchedDeathTile;
+    }
+
+    public void setPlayerWhoTouchedDeathTile(Player playerWhoTouchedDeathTile) {
+        this.playerWhoTouchedDeathTile = playerWhoTouchedDeathTile;
     }
 }
