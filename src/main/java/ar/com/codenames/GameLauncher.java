@@ -234,11 +234,6 @@ public class GameLauncher {
             }
         });
 
-        server.addEventListener("requestGameReport", RequestObject.class, (client, data, ackSender) -> {
-            logEvent(EventType.REQUEST, "requestGameReport", client);
-            client.sendEvent("responseGameReport", game.generateReport());
-        });
-
         server.addEventListener("requestGameReportHtml", RequestObject.class, (client, data, ackSender) -> {
             logEvent(EventType.REQUEST, "requestGameReport", client);
             client.sendEvent("responseGameReportHtml", game.generateReportHtml());

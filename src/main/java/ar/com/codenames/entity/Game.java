@@ -596,45 +596,6 @@ public class Game {
         }
     }
 
-    public String generateReport() {
-        Map<Integer, Set<Player>> playersByTeam = getPlayersByTeam();
-
-        gameReport = new StringBuilder();
-        String sep = "";
-        for (Integer teamId : playersByTeam.keySet()) {
-            for (Player player : playersByTeam.get(teamId)) {
-                gameReport.append(sep).append(player.getExcelname()).append("(").append(teams.get(player.getTeamId()).getName()).append(")");
-                sep = ",";
-            }
-        }
-
-        for (Registro registro : registros) {
-            gameReport.append("\n");
-            sep = "";
-            for (Integer teamId : playersByTeam.keySet()) {
-                for (Player player : playersByTeam.get(teamId)) {
-                    // Si esta en este Registro, significa que estuvo conectado durante esta partida
-                    Player playerInCurrentRegistry = getPlayerInSet(registro.getPlayers(), player);
-                    if (playerInCurrentRegistry != null) {
-                        // Si el jugadora actual estuvo en otro equipo durante esa partida, le pongo una marca de "O/E"
-                        if (!playerInCurrentRegistry.getTeamId().equals(player.getTeamId())) {
-                            gameReport.append(sep).append("O/E");
-                        } else if (player.getTeamId().equals(registro.getWinnerTeamId())) {
-                            gameReport.append(sep).append("+1");
-                        } else {
-                            gameReport.append(sep).append("-1");
-                        }
-                    } else {
-                        gameReport.append(sep).append("N/J");
-                    }
-                    sep = ",";
-                }
-            }
-        }
-
-        return gameReport.toString();
-    }
-
     public String generateReportHtml() {
         if (lastQuantityOfRegistrosInReport == registros.size()) return gameReport != null ? gameReport.toString() : "<p>Aun no hay estadisticas computadas</p>";
 
