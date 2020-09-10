@@ -48,7 +48,8 @@ let timer = $('#timer');
 ////////////////////////////////////////////////////////////////////////////
 let playerRole = 'GUESSER';
 mainCarousel.carousel({
-    interval: false
+    interval: false,
+    touch: false
 });
 
 // Helper functions
