@@ -292,7 +292,6 @@ public class Game {
                 registroPartidaActual.setPlayerWhoTouchedDeathTile(whoTouchedTile);
                 registroPartidaActual.setWinnerTeamId(winnerId.get(0));
                 registros.add(registroPartidaActual);
-                generateReport();
             } else if (tile.isNeutral()) {
                 switchTurn(); // Switch turn if neutral was flipped
             } else {
@@ -509,7 +508,6 @@ public class Game {
                 registroPartidaActual.setWinnerTeamId(teamId);
                 registroPartidaActual.setDeathTileFlipped(false);
                 registros.add(registroPartidaActual);
-                generateReport();
             }
         }
     }
