@@ -449,7 +449,7 @@ stickers.push({onclick : 'ron-podia-fallar', text : 'Ron: -Podia fallar', keys :
 stickers.push({onclick : 'tobi-ah-se-les-agrego-tiempo', text : 'Tobi: -Ah, se les agregó tiempo?', keys : ''});
 stickers.push({onclick : 'lau-listo-o-te-quedo-alguna-palabra', text : 'Lau: -Listo? O te quedó alguna palabra por decir en la pista?', keys : ''});
 stickers.push({onclick : 'tobi-pista-antes-de-los-diez', text : 'Tobi: -En algun universo me das la pista antes de los 10"?', keys : ''});
-stickers.push({onclick : 'en-un-cumpleañito', text : 'En un cumpleañito', keys : ''});
+stickers.push({onclick : 'en-un-cumpleanito', text : 'En un cumpleañito', keys : ''});
 
 function buildDropdown(value) {
     let contents = [];
