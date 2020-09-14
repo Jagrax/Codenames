@@ -450,6 +450,9 @@ stickers.push({onclick : 'tobi-ah-se-les-agrego-tiempo', text : 'Tobi: -Ah, se l
 stickers.push({onclick : 'lau-listo-o-te-quedo-alguna-palabra', text : 'Lau: -Listo? O te quedó alguna palabra por decir en la pista?', keys : ''});
 stickers.push({onclick : 'tobi-pista-antes-de-los-diez', text : 'Tobi: -En algun universo me das la pista antes de los 10"?', keys : ''});
 stickers.push({onclick : 'en-un-cumpleanito', text : 'En un cumpleañito', keys : ''});
+stickers.push({onclick : 'gano-quien-tenia-que-ganar', text : 'Gano quien tenía que ganar', keys : ''});
+stickers.push({onclick : 'pero-por-que-tocas', text : 'Pero por qué tocas si estamos debatiendo', keys : ''});
+stickers.push({onclick : 'meli-cual-fue-la-pista', text : 'Meli: -Cuál fue la pista?', keys : ''});
 
 function buildDropdown(value) {
     let contents = [];
