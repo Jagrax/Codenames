@@ -455,6 +455,8 @@ stickers.push({onclick : 'en-un-cumpleanito', text : 'En un cumpleañito', keys 
 stickers.push({onclick : 'gano-quien-tenia-que-ganar', text : 'Gano quien tenía que ganar', keys : ''});
 stickers.push({onclick : 'pero-por-que-tocas', text : 'Pero por qué tocas si estamos debatiendo', keys : ''});
 stickers.push({onclick : 'meli-cual-fue-la-pista', text : 'Meli: -Cuál fue la pista?', keys : ''});
+stickers.push({onclick : 'esto-va-a-terapia', text : 'La Papa y Marian: -Esto va a terapia', keys : ''});
+stickers.push({onclick : 'pistas-de-mario', text : 'Pistas de Mario', keys : ''});
 
 function buildDropdown(value) {
     let contents = [];
