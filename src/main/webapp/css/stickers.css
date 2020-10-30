@@ -362,3 +362,66 @@
     width: 256px;
     height: 256px;
 }
+
+.jose-y-lu-no-esperaba-nada {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_051.png");
+    width: 512px;
+    height: 512px;
+}
+
+.eso-es-lo-mejor-que-podes-dar {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_052.png");
+    width: 512px;
+    height: 512px;
+}
+
+.mariel-es-lo-que-hay {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_053.png");
+    width: 512px;
+    height: 512px;
+}
+
+.mariano-paren-todo {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_054.png");
+    width: 512px;
+    height: 512px;
+}
+
+.lu-mis-esperanzas {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_055.png");
+    width: 512px;
+    height: 512px;
+}
+
+.juani-ruido-de-gin {
+    animation: stickerAnim256 10s linear;
+    background-image: url("../images/sticker_056.png");
+    width: 256px;
+    height: 256px;
+}
+
+.jose-aca-esta-la-pista {
+    animation: stickerAnim384 10s linear;
+    background-image: url("../images/sticker_057.png");
+    width: 384px;
+    height: 384px;
+}
+
+.celeste-mmm-vs-decis {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_058.png");
+    width: 512px;
+    height: 512px;
+}
+
+.manu-y-al-que-no-le-gusta {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_059.png");
+    width: 512px;
+    height: 512px;
+}
