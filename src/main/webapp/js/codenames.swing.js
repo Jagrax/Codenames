@@ -39,6 +39,7 @@ let endTurn = $('#end-turn');
 let newGame = $('#new-game');
 let reqGameStatistics = $('#reqGameStatistics');
 let switchRole = $('#role-spymaster');
+let searchStickerInput = $('#searchSticker');
 // UI Elements
 let turnMessage = $('#status');
 let timer = $('#timer');
