@@ -63,7 +63,6 @@
     border-color: rgb(234, 217, 172);
     color: white;
     font-family: 'Rye', cursive;
-    letter-spacing: 5px;
 }
 
 .btn-swing-city.unflipped {
@@ -89,8 +88,8 @@
     background-size: cover;
     border-color: #FCD18D;
     color: #134955;
-    font-family: 'HOUSEMOVEMENTS-CUSTOM';
-    letter-spacing: 5px;
+    font-family: 'HOUSEMOVEMENTS-CUSTOM', Arial, sans-serif;
+    letter-spacing: 1px;
 }
 
 .btn-baila-swing.unflipped {
@@ -117,7 +116,7 @@
     background-size: cover;
     border: 2px solid #FCD18D;
     color: #134955;
-    font-family: 'HOUSEMOVEMENTS-CUSTOM';
+    font-family: 'HOUSEMOVEMENTS-CUSTOM', Arial, sans-serif;
     letter-spacing: 5px;
 }
 
