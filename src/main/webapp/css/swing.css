@@ -1,0 +1,175 @@
+@font-face {
+    font-family: 'HOUSEMOVEMENTS-CUSTOM';
+    src: url('../fonts/HOUSEMOVEMENTS-CUSTOM.OTF');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.banner {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.banner iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.banner .custom-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+@media (min-aspect-ratio: 16/9) {
+    .banner iframe {
+        height: 300%;
+        top: -100%;
+    }
+}
+@media (max-aspect-ratio: 16/9) {
+    .banner iframe {
+        width: 300%;
+        left: -100%;
+    }
+}
+@media all and (max-width: 600px) {
+    .vid-info {
+        width: 50%;
+        padding: 0.5rem;
+    }
+    .vid-info h1 {
+        margin-bottom: 0.2rem;
+    }
+}
+@media all and (max-width: 500px) {
+    .vid-info .acronym {
+        display: none;
+    }
+}
+
+.btn-swing-city {
+    background-color: #241e20;
+    border-color: rgb(234, 217, 172);
+    color: white;
+    font-family: 'Rye', cursive;
+    letter-spacing: 5px;
+}
+
+.btn-swing-city.unflipped {
+    background-color: rgba(36, 30, 32, .5);
+}
+
+.btn-swing-city:hover {
+    color: white;
+}
+
+.text-swing-city {
+    color: #241e20;
+}
+
+#game-board .btn {
+    font-size: 1.2rem;
+}
+
+.btn-baila-swing {
+    background-image: url('../images/team-Baila-Swing-logo-btn-bg.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border-color: #FCD18D;
+    color: #134955;
+    font-family: 'HOUSEMOVEMENTS-CUSTOM';
+    letter-spacing: 5px;
+}
+
+.btn-baila-swing.unflipped {
+    background-image: url('../images/team-Baila-Swing-logo-btn-bg-opacity.png');
+}
+
+.btn-baila-swing:hover {
+    color: #134955;
+}
+
+.text-baila-swing {
+    color: #134955;
+}
+
+#turn-info.game-over {
+    transition: 0.5s;
+    transition-delay: 0.25s;
+}
+
+#turn-info.game-over .text-baila-swing {
+    background-image: url('../images/team-Baila-Swing-logo-btn-bg.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border: 2px solid #FCD18D;
+    color: #134955;
+    font-family: 'HOUSEMOVEMENTS-CUSTOM';
+    letter-spacing: 5px;
+}
+
+#turn-info.game-over .text-swing-city {
+    background-color: #241e20;
+    border: 2px solid rgb(234, 217, 172);
+    color: white;
+    font-family: 'Rye', cursive;
+    letter-spacing: 5px;
+}
+
+#turn-info.game-over span:nth-child(1) {
+    width: 100%;
+}
+
+#turn-info.game-over span:nth-child(2) {
+    display: none;
+}
+
+#turn-info span:nth-child(1) {
+    width: 80%;
+}
+#turn-info span:nth-child(2) {
+    width: 20%;
+}
+
+body {
+    background-image: url('https://scontent.faep9-2.fna.fbcdn.net/v/t31.0-8/23593480_1573893899365248_964765565288589422_o.jpg?_nc_cat=106&ccb=2&_nc_sid=730e14&_nc_ohc=zTdl2JxYhNoAX9UlaE7&_nc_ht=scontent.faep9-2.fna&oh=180654a2a8375132004e0da0f4cce851&oe=5FC1F9C7');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.page-wrapper {
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+#score-team-1 {
+    background-color: #fcd18d;
+    color: #134955!important;
+    display: inline-block;
+    width: 40px;
+    border-radius: 2rem;
+    text-align: center;
+}
+
+#score-team-0 {
+    background-color: #241e20;
+    color: white!important;
+    display: inline-block;
+    width: 40px;
+    border-radius: 2rem;
+    text-align: center;
+}
