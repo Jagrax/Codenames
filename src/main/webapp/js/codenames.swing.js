@@ -419,6 +419,7 @@ stickers.push({onclick : 'juani-ruido-de-gin', text : '*Ruido de gin', keys : ''
 stickers.push({onclick : 'jose-aca-esta-la-pista', text : 'Jose: -Aca esta la pista', keys : ''});
 stickers.push({onclick : 'celeste-mmm-vs-decis', text : 'Celeste: -Mmm vs decis', keys : ''});
 stickers.push({onclick : 'manu-y-al-que-no-le-gusta', text : 'Manu: -Y al que no le guste, que se joda', keys : ''});
+stickers.push({onclick : 'juani-tierra-llamando-a-mario', text : 'Juani: -Tierra llamando a Mario', keys : ''});
 
 function buildDropdown(value) {
     let contents = [];

@@ -425,3 +425,10 @@
     width: 512px;
     height: 512px;
 }
+
+.juani-tierra-llamando-a-mario {
+    animation: stickerAnim512 10s linear;
+    background-image: url("../images/sticker_060.png");
+    width: 512px;
+    height: 512px;
+}
