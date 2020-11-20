@@ -457,6 +457,16 @@ stickers.push({onclick : 'pero-por-que-tocas', text : 'Pero por qué tocas si es
 stickers.push({onclick : 'meli-cual-fue-la-pista', text : 'Meli: -Cuál fue la pista?', keys : ''});
 stickers.push({onclick : 'esto-va-a-terapia', text : 'La Papa y Marian: -Esto va a terapia', keys : ''});
 stickers.push({onclick : 'pistas-de-mario', text : 'Pistas de Mario', keys : ''});
+stickers.push({onclick : 'jose-y-lu-no-esperaba-nada', text : 'Jose y Lu: No esperaba nada de ustedes y aun asi logran decepcionarme', keys : ''});
+stickers.push({onclick : 'eso-es-lo-mejor-que-podes-dar', text : 'Eso es lo mejor que podes dar?', keys : ''});
+stickers.push({onclick : 'mariel-es-lo-que-hay', text : 'Mariel: -Es lo que hay', keys : ''});
+stickers.push({onclick : 'mariano-paren-todo', text : 'Mariano: PAREN TODO', keys : ''});
+stickers.push({onclick : 'lu-mis-esperanzas', text : 'Lu: -Mis esperanzas...', keys : ''});
+stickers.push({onclick : 'juani-ruido-de-gin', text : '*Ruido de gin', keys : ''});
+stickers.push({onclick : 'jose-aca-esta-la-pista', text : 'Jose: -Aca esta la pista', keys : ''});
+stickers.push({onclick : 'celeste-mmm-vs-decis', text : 'Celeste: -Mmm vs decis', keys : ''});
+stickers.push({onclick : 'manu-y-al-que-no-le-gusta', text : 'Manu: -Y al que no le guste, que se joda', keys : ''});
+stickers.push({onclick : 'juani-tierra-llamando-a-mario', text : 'Juani: -Tierra llamando a Mario', keys : ''});
 
 function buildDropdown(value) {
     let contents = [];
