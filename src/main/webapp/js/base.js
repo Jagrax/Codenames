@@ -1,4 +1,5 @@
-const socket = io('http://localhost:9093/'); // Connect to server
+//const socket = io('http://localhost:9093/'); // Connect to server
+const socket = io('http://pacific-badlands-39971.herokuapp.com'); // Connect to server
 
 let gameLobby = $('#game-lobby');
 let gameContainer = $('#game-container');
