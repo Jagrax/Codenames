@@ -280,13 +280,18 @@ public class App {
         PLAYER_LIST.remove(player.getId());
         // Remove the player from their room
         ROOM_LIST.get(player.getRoomName()).getPlayers().remove(player.getId());
-        gameUpdate(player.getRoomName());
+        boolean isGameCreated = ROOM_LIST.get(player.getRoomName()).getGame() != null;
+        if (isGameCreated) {
+            gameUpdate(player.getRoomName());
+        }
         // Server Log
         logStats(client.getSessionId().toString() + "(" + player.getNickname() + ") LEFT '" + player.getRoomName() + "'(" + ROOM_LIST.get(player.getRoomName()).getPlayers().size() + ")");
 
         // If the number of players in the room is 0 at this point, delete the room entirely
         if (ROOM_LIST.get(player.getRoomName()).getPlayers().isEmpty()) {
-            ROOM_LIST.get(player.getRoomName()).getTurnTimer().cancel();
+            if (isGameCreated) {
+                ROOM_LIST.get(player.getRoomName()).getTurnTimer().cancel();
+            }
             ROOM_LIST.remove(player.getRoomName());
             logStats("DELETE ROOM: '" + player.getRoomName() + "'");
         }
@@ -308,16 +313,21 @@ public class App {
         PLAYER_LIST.remove(client.getSessionId().toString());
         // If the player was in a room
         if (player != null) {
+            boolean isGameCreate = ROOM_LIST.get(player.getRoomName()).getGame() != null;
             // Remove the player from their room
             ROOM_LIST.get(player.getRoomName()).getPlayers().remove(client.getSessionId().toString());
-            // Update everyone in the room
-            gameUpdate(player.getRoomName());
+            if (isGameCreate) {
+                // Update everyone in the room
+                gameUpdate(player.getRoomName());
+            }
             // Server Log
             logStats(client.getSessionId().toString() + "(" + player.getNickname() + ") LEFT '" + player.getRoomName() + "'(" + ROOM_LIST.get(player.getRoomName()).getPlayers().size() + ")");
 
             // If the number of players in the room is 0 at this point, delete the room entirely
             if (ROOM_LIST.get(player.getRoomName()).getPlayers().isEmpty()) {
-                ROOM_LIST.get(player.getRoomName()).getTurnTimer().cancel();
+                if (isGameCreate) {
+                    ROOM_LIST.get(player.getRoomName()).getTurnTimer().cancel();
+                }
                 ROOM_LIST.remove(player.getRoomName());
                 logStats("DELETE ROOM: '" + player.getRoomName() + "'");
             }
