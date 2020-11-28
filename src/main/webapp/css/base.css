@@ -1,8 +1,3 @@
-body {
-    background: radial-gradient(ellipse at bottom, #5091DD 0%, #030617 100%);
-    height: 100vh;
-}
-
 #game-board {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
@@ -14,7 +9,18 @@ body {
     color: white;
 }
 
-#options {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+.form-switch-lg {
+    padding-left: 3.5rem;
+}
+
+.form-switch-lg .form-check-input {
+    width: 3rem;
+    height: 1.5rem;
+    margin-left: -3.5rem;
+    margin-top: 0;
+}
+
+#timer {
+    font-family: 'Orbitron', sans-serif;
+    width: 3rem;
 }

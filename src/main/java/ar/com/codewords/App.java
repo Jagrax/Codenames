@@ -229,7 +229,7 @@ public class App {
                 JSONObject joinRoomResponse = new JSONObject();
                 joinRoomResponse.put("success", false);
                 joinRoomResponse.put("msg", "Contraseña incorrecta");
-                joinRoomResponse.put("field", "room-password");
+                joinRoomResponse.put("field", "room-" + roomName + "-password");
                 client.sendEvent("joinRoomResponse", joinRoomResponse.toString());
             } else {
                 if (StringUtils.isEmpty(nickname)) {

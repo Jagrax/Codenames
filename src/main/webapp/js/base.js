@@ -147,8 +147,10 @@ socket.on('serverStats', function (data) {
             $.each(data.rooms, function (i, room) {
                 var playersInRoom = 0;
                 if (room.players) playersInRoom = Object.keys(room.players).length;
+                var roomHasPassword = false;
                 var roomSecurity;
                 if (room.password && room.password.trim().length > 0) {
+                    roomHasPassword = true;
                     roomSecurity = '<svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-lock" fill="currentColor" xmlns="http://www.w3.org/2000/svg">\n' +
                         '  <path fill-rule="evenodd" d="M11.5 8h-7a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1zm-7-1a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-7zm0-3a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>\n' +
                         '</svg>';
@@ -157,7 +159,18 @@ socket.on('serverStats', function (data) {
                         '  <path fill-rule="evenodd" d="M9.655 8H2.333c-.264 0-.398.068-.471.121a.73.73 0 0 0-.224.296 1.626 1.626 0 0 0-.138.59V14c0 .342.076.531.14.635.064.106.151.18.256.237a1.122 1.122 0 0 0 .436.127l.013.001h7.322c.264 0 .398-.068.471-.121a.73.73 0 0 0 .224-.296 1.627 1.627 0 0 0 .138-.59V9c0-.342-.076-.531-.14-.635a.658.658 0 0 0-.255-.237A1.122 1.122 0 0 0 9.655 8zm.012-1H2.333C.5 7 .5 9 .5 9v5c0 2 1.833 2 1.833 2h7.334c1.833 0 1.833-2 1.833-2V9c0-2-1.833-2-1.833-2zM8.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>\n' +
                         '</svg>';
                 }
+
                 var joinButton = $('<button class="btn btn-sm btn-block btn-success" title="Unirse a la sala">');
+                let inputPassword = "";
+                if (roomHasPassword) {
+                    inputPassword = $('<input type="password" id="room-' + room.name + '-password" class="form-control form-control-sm" onkeypress="">');
+                    inputPassword.on("keypress", function (e) {
+                        if (e.which === 13) {
+                            joinButton.click();
+                        }
+                    });
+                }
+
                 joinButton.html('<svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-play" fill="currentColor" xmlns="http://www.w3.org/2000/svg">\n' +
                     '  <path fill-rule="evenodd" d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>\n' +
                     '</svg>');
@@ -165,7 +178,7 @@ socket.on('serverStats', function (data) {
                 joinButton.on("click", function () {
                     nickname.removeClass('is-invalid');
                     roomName.removeClass('is-invalid');
-                    socket.emit('joinRoom', {roomName: room.name, roomPassword: '', excelName: excelName.val(), nickname: nickname.val()});
+                    socket.emit('joinRoom', {roomName: room.name, roomPassword: inputPassword ? inputPassword.val() : null, excelName: excelName.val(), nickname: nickname.val()});
                 });
 
                 if (!room.game) {
@@ -175,7 +188,8 @@ socket.on('serverStats', function (data) {
                 var tr = $('<tr>').append(
                     $('<td class="text-center">').html(roomSecurity),
                     $('<td>').text(room.name),
-                    $('<td class="text-center">').text(playersInRoom),
+                    $('<td class="text-center d-none d-xl-table-cell">').text(playersInRoom),
+                    $('<td class="text-center">').append(inputPassword).append('<div class="invalid-feedback">'),
                     $('<td class="text-center">').append(joinButton)
                 );
                 tr.appendTo(roomsTable.children("tbody"));
@@ -232,7 +246,7 @@ socket.on('leaveResponse', function (data) {
 
 // Server update client timer
 socket.on('timerUpdate', function (data) {
-    timer.text("[" + data + "]");
+    timer.text(data);
 });
 
 // Response to New Game
@@ -325,6 +339,7 @@ function updateInfo(game, team) {
     } else {
         turnMessage.text('Turno del ' + game.teams[game.turnId].name);
         turnMessage.addClass('text-' + game.teams[game.turnId].color);
+        timer.prop('class', 'ml-3 bg-dark bg-gradient text-center text-white border border-' + game.teams[game.turnId].color);
     }
 
     // Disable end turn button for opposite team or spymaster
@@ -370,7 +385,7 @@ function updatePlayerlist(players, teams) {
             let btnTile = $("<button class='btn btn-sm btn-" + teams[i].color + "'>Unirse al equipo " + teams[i].name + "</button>").on("click", function () {
                 socket.emit('joinTeam', {teamId: i});
             });
-            teamTable.append($("<thead></thead>").append($("<tr></tr>").append($("<td></td>").append(btnTile))));
+            teamTable.append($("<thead></thead>").append($("<tr></tr>").append($("<td></td>").append($("<div class='d-grid'></div>").append(btnTile)))));
             teamTable.append($("<tbody></tbody>"));
             teamsTables.append($("<div class='col'></div>").append(teamTable));
         } else {
