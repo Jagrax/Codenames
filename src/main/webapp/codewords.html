@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-CuOF+2SnTUfTwSZjCXf01h7uYhfOBuxIhGKPbfEJ3+FqH/s6cIFN9bGr1HmAg4fQ" crossorigin="anonymous">
+        <link href="css/base.css" rel="stylesheet">
+        <title>CODEWORDS 3.0</title>
+
+        <script src="js/socket.io/socket.io.js"></script>
+        <script src="js/moment.min.js"></script>
+    </head>
+    <body>
+        <h1 class="text-center text-white">CODEWORDS</h1>
+
+        <div class="container-fluid">
+            <div class="row" style="display: none" id="game-lobby">
+                <div class="col-12 col-xl-6 offset-xl-3">
+                    <div class="card">
+                        <div class="card-body" id="config-card">
+                            <div class="row mb-3 g-3">
+                                <div class="col-12 col-xl-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="excel-name" placeholder="Ana">
+                                        <label for="excel-name">Nombre (para las estadísticas)</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="nickname" placeholder="Ana" required>
+                                        <label for="nickname">Apodo</label>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3 g-3 " style="display:none">
+                                <div class="col-12 col-xl-6">
+                                    <div class="form-floating">
+                                        <select class="form-control" id="team-1-color" required>
+                                            <option selected>Rojo</option>
+                                            <option>Azul</option>
+                                            <option>Verde</option>
+                                            <option>Amarillo</option>
+                                            <option>Cyan</option>
+                                        </select>
+                                        <label for="team-1-color">Equipo #1</label>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-6">
+                                    <div class="form-floating">
+                                        <select class="form-control" id="team-2-color" required>
+                                            <option>Rojo</option>
+                                            <option selected>Azul</option>
+                                            <option>Verde</option>
+                                            <option>Amarillo</option>
+                                            <option>Cyan</option>
+                                        </select>
+                                        <label for="team-2-color">Equipo #2</label>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3 g-3 " style="display:none">
+                                <div class="col-12">
+                                    <label for="words-packs">Packs de palabras para jugar</label>
+                                    <select multiple class="form-control" id="words-packs" size="5" required></select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="row g-3 " style="display:none">
+                                <div class="col-12 col-xl-4 order-xl-2 text-center">
+                                    <div class="d-grid"><button class="btn btn-dark" type="button" data-toggle="modal" data-target="#dlgGameConfig">Configuración avanzada</button></div>
+                                </div>
+                                <div class="col-6 col-xl-4 order-xl-1 text-left">
+                                    <div class="d-grid"><button class="btn btn-danger" type="button" id="back-to-lobby">Volver</button></div>
+                                </div>
+                                <div class="col-6 col-xl-4 order-xl-3 text-right">
+                                    <div class="d-grid"><button type="button" class="btn btn-success" id="start-game">Iniciar juego</button></div>
+                                </div>
+                            </div>
+                            <table id="rooms" class="table table-sm table-light table-striped mb-3">
+                                <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col" class="text-center">Nombre de la sala</th>
+                                    <th scope="col" class="text-center">Jugadores en la sala</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <div class="row mb-3 g-3">
+                                <div class="col-12 col-xl-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="room-name" placeholder="Ana's Room" required>
+                                        <label for="room-name">Nombre de la sala</label>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-6">
+                                    <div class="form-floating">
+                                        <input type="password" class="form-control" id="room-password" placeholder="Room's Password" disabled>
+                                        <label for="room-password">Contraseña</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <div class="d-grid"><button type="button" class="btn btn-success" id="join-create">Crear sala</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="display: none" id="game-container">
+                <div class="col-12 col-xl-4">
+                    <div class="row">
+                        <div id="teams-table-container" class="col-6 col-xl-12">
+                            <div class="bg-white rounded p-1">
+                                <h6 class="text-center">Jugadores</h6>
+                                <div id="teams-tables" class="row no-gutters"></div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-xl-12">
+                            <textarea readonly class="form-control mt-xl-3" id="game-log" rows="3">Registro de la partida</textarea>
+                            <div id="options" class="my-3 d-grid gap-3">
+                                <button class="btn btn-block btn-secondary" type="button" id="randomize-teams">Aleatorizar equipos</button>
+                                <button id="reqGameStatistics" type="button" class="btn btn-outline-light">Ver estadisticas</button>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Stickers
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <form class="px-4 py-2">
+                                            <input type="search" class="form-control" id="searchSticker" placeholder="Ingrese un texto relacionado al sticker">
+                                        </form>
+                                        <div id="menuItems"></div>
+                                        <div id="empty" class="dropdown-header">No se encontró ningun sticker</div>
+                                    </div>
+                                </div>
+                                <button id="leave-game" type="button" class="btn btn-outline-light">Salir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-xl-8">
+                    <div class="row">
+                        <div id="turn-info-container"       class="col-12 col-md-6 order-md-2 text-center">
+                            <span id="status"></span><span id="timer" class="text-white"></span>
+                        </div>
+                        <div id="remaining-words-container" class="col-6  col-md-3 order-md-1 text-left">
+                            <span id="score-team-0" style="display:none"></span>
+                            <span id="score-team-1-sep" class="text-white" style="display:none">-</span>
+                            <span id="score-team-1" style="display:none"></span>
+                            <span id="score-team-2-sep" class="text-white" style="display:none">-</span>
+                            <span id="score-team-2" style="display:none"></span>
+                            <span id="score-team-3-sep" class="text-white" style="display:none">-</span>
+                            <span id="score-team-3" style="display:none"></span>
+                            <span id="score-team-4-sep" class="text-white" style="display:none">-</span>
+                            <span id="score-team-4" style="display:none"></span>
+                        </div>
+                        <div id="end-turn-container"        class="col-6  col-md-3 order-md-3 text-right">
+                            <button id="end-turn" type="button" class="btn btn-outline-light">Finalizar turno</button>
+                        </div>
+                    </div>
+                    <div id="game-board" class="my-3 d-grid gap-3">
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORDWORDWORDW ORDWORDWORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                        <button>WORD</button>
+                    </div>
+                    <div class="row">
+                        <div id="spymaster-switch-container" class="col-6 text-left">
+                            <div class="custom-control custom-switch custom-switch-lg">
+                                <input type="checkbox" class="custom-control-input" id="role-spymaster">
+                                <label class="custom-control-label text-white" for="role-spymaster">Spymaster</label>
+                            </div>
+                        </div>
+                        <div id="newgame-button-container" class="col-6 text-right">
+                            <button id="new-game" type="button" class="btn btn-outline-light">Nueva partida</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="dlgGameConfig" tabindex="-1" aria-labelledby="dlgGameConfigLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="dlgGameConfigLabel">Configuración avanzada</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label for="boardSize" class="col-3 col-form-label col-form-label-sm text-nowrap">Tamaño del tablero</label>
+                            <div class="col-3">
+                                <input id="boardSize" type="number" min="3" max="6" class="form-control form-control-sm" value="5"/>
+                            </div>
+                            <label for="team-3-color" class="col-3 col-form-label col-form-label-sm text-nowrap">Equipo #3</label>
+                            <div class="col-3">
+                                <select id="team-3-color" class="form-control form-control-sm">
+                                    <option selected></option>
+                                    <option>Rojo</option>
+                                    <option>Azul</option>
+                                    <option>Verde</option>
+                                    <option>Amarillo</option>
+                                    <option>Cyan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="turnDuration" class="col-3 col-form-label col-form-label-sm text-nowrap">Duración de cada turno</label>
+                            <div class="col-3">
+                                <input id="turnDuration" type="number" min="30" max="240" class="form-control form-control-sm" value="60"/>
+                            </div>
+                            <label for="team-4-color" class="col-3 col-form-label col-form-label-sm text-nowrap">Equipo #4</label>
+                            <div class="col-3">
+                                <select id="team-4-color" class="form-control form-control-sm">
+                                    <option selected></option>
+                                    <option>Rojo</option>
+                                    <option>Azul</option>
+                                    <option>Verde</option>
+                                    <option>Amarillo</option>
+                                    <option>Cyan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="wordsByTeam" class="col-3 col-form-label col-form-label-sm text-nowrap">Palabras por equipo</label>
+                            <div class="col-3">
+                                <input id="wordsByTeam" type="number" min="1" max="36" class="form-control form-control-sm" value="8"/>
+                            </div>
+                            <label for="team-5-color" class="col-3 col-form-label col-form-label-sm text-nowrap">Equipo #5</label>
+                            <div class="col-3">
+                                <select id="team-5-color" class="form-control form-control-sm">
+                                    <option selected></option>
+                                    <option>Rojo</option>
+                                    <option>Azul</option>
+                                    <option>Verde</option>
+                                    <option>Amarillo</option>
+                                    <option>Cyan</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="dlgGameStatistics" tabindex="-1" aria-labelledby="dlgGameStatisticsLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="dlgGameStatisticsLabel">Estadisticas</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"></div>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-popRpmFF9JQgExhfw5tZT4I9/CI5e2QcuUZPOVXb1m7qUmeR2b50u+YFEYe1wgzy" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script src="js/base.js"></script>
+    </body>
+</html>

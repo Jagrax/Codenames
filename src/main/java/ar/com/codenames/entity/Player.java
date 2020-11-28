@@ -3,6 +3,7 @@ package ar.com.codenames.entity;
 import com.corundumstudio.socketio.SocketIOClient;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Objects;
 
 public class Player implements Serializable, Comparable<Player> {
@@ -12,6 +13,7 @@ public class Player implements Serializable, Comparable<Player> {
     private String nickname;
     private Integer teamId;
     private Role role;
+    private String roomName;
 
     @Override
     public int compareTo(Player o) {
@@ -23,10 +25,18 @@ public class Player implements Serializable, Comparable<Player> {
     }
 
     public Player(SocketIOClient client, String excelname, String nickname) {
+        this(client, excelname, nickname, null, null);
+    }
+
+    public Player(SocketIOClient client, String excelname, String nickname, String roomName, Map<String, Player> PLAYER_LIST) {
         this.id = client.getSessionId().toString();
         this.excelname = excelname;
         this.nickname = nickname;
+        this.roomName = roomName;
         this.role = Role.GUESSER;
+
+        // Add player to player list and add their socket to the socket list
+        if (PLAYER_LIST != null) PLAYER_LIST.put(this.id, this);
     }
 
     public String getId() {
@@ -69,6 +79,14 @@ public class Player implements Serializable, Comparable<Player> {
         this.role = role;
     }
 
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+
     @Override
     public String toString() {
         return "Player ["
@@ -76,7 +94,8 @@ public class Player implements Serializable, Comparable<Player> {
                 + ((excelname != null) ? "excelname=" + excelname + ", " : "")
                 + ((nickname != null) ? "nickname=" + nickname + ", " : "")
                 + ((teamId != null) ? "teamId=" + teamId + ", " : "")
-                + ((role != null) ? "role=" + role : "")
+                + ((role != null) ? "role=" + role + ", " : "")
+                + ((roomName != null) ? "room=" + roomName : "")
                 + "]";
     }
 

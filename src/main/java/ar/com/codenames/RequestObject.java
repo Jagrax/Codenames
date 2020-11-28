@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 public class RequestObject {
 
+    private String roomName;
+    private String roomPassword;
     private String excelName;
     private String nickname;
     private String message;
@@ -21,6 +23,22 @@ public class RequestObject {
     private String sticker;
 
     public RequestObject() {
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+
+    public String getRoomPassword() {
+        return roomPassword;
+    }
+
+    public void setRoomPassword(String roomPassword) {
+        this.roomPassword = roomPassword;
     }
 
     public String getExcelName() {
