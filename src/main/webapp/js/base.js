@@ -93,6 +93,7 @@ backToLobby.on("click", function () {
 
 // User Start Game
 startGame.on("click", function () {
+    wordsPacks.removeClass('is-invalid');
     let teamColors = [];
     if (team1color.val()) teamColors.push(team1color.val());
     if (team2color.val()) teamColors.push(team2color.val());
@@ -246,10 +247,12 @@ socket.on('startGameResponse', function (data) {
         gameLobby.hide();
         gameContainer.show();
     } else {
-        let input = $('#' + data.field);
-        if (input) {
+        if (data.field) {
+            let input = $('#' + data.field);
             input.addClass('is-invalid');
             input.closest('div').find('.invalid-feedback').text(data.msg);
+        } else {
+            alert(data.msg);
         }
     }
 });
@@ -349,9 +352,7 @@ function updateInfo(game, team) {
         if (pendingTilesSpan.is(":hidden")) {
             pendingTilesSpan.show();
         }
-        if (!pendingTilesSpan.hasClass('text-' + game.teams[n].color)) {
-            pendingTilesSpan.addClass('text-' + game.teams[n].color);
-        }
+        pendingTilesSpan.prop('class', 'text-' + game.teams[n].color);
         pendingTilesSpan.text(game.teams[n].pendingTiles);
 
         if (n > 0) {
@@ -412,6 +413,7 @@ function updateBoard(board, teams) {
 
 // Update the player list
 function updatePlayerlist(players, teams) {
+    teamsTables.empty();
     for (let i in teams) {
         let teamTable = $('#team-table-' + i);
         if (teamTable.length === 0) {
@@ -443,6 +445,7 @@ function updatePlayerlist(players, teams) {
 function drawBoard(board) {
     // Limpio el tablero
     gameBoard.empty();
+    gameBoard.prop("class", "my-3 d-grid gap-3 board-size-" + board.tiles.length);
     // Recorro la matriz de palabras y las dibujo en pantalla
     for (let x = 0; x < board.tiles.length; x++) {
         for (let y = 0; y < board.tiles.length; y++) {

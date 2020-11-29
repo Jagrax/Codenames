@@ -469,7 +469,7 @@ public class Codewords {
         gameReport = new StringBuilder(
                 "<h5>Puntajes individuales</h5>" +
                         "<table class='table table-sm table-bordered mb-3'>" +
-                        "  <thead class='thead-dark'>" +
+                        "  <thead class='table-dark'>" +
                         "    <tr>" +
                         "      <th scope='col'>Jugadores</th>" +
                         "      <th scope='col'>Ganadas</th>" +
@@ -487,7 +487,7 @@ public class Codewords {
                         "</table>" +
                         "<h5>Puntajes por equipo</h5>" +
                         "<table class='table table-sm table-bordered mb-3'>" +
-                        "  <thead class='thead-dark'>" +
+                        "  <thead class='table-dark'>" +
                         "    <tr>" +
                         "      <th scope='col'></th>");
         for (Integer teamId : teams.keySet()) {
@@ -509,7 +509,7 @@ public class Codewords {
                         "</table>" +
                         "<h5>Puntajes individuales como Spymaster</h5>" +
                         "<table class='table table-sm table-bordered mb-3'>" +
-                        "  <thead class='thead-dark'>" +
+                        "  <thead class='table-dark'>" +
                         "    <tr>" +
                         "      <th scope='col'>Jugadores</th>" +
                         "      <th scope='col'>Ganadas</th>" +
@@ -526,7 +526,7 @@ public class Codewords {
                         "</table>" +
                         "<h5>Negras por equipo</h5>" +
                         "<table class='table table-sm table-bordered mb-3'>" +
-                        "  <thead class='thead-dark'>" +
+                        "  <thead class='table-dark'>" +
                         "    <tr>" +
                         "      <th scope='col'></th>");
         for (Integer teamId : teams.keySet()) {
@@ -548,7 +548,7 @@ public class Codewords {
                         "</table>" +
                         "<h5>Negras por jugador</h5>" +
                         "<table class='table table-sm table-bordered mb-3'>" +
-                        "  <thead class='thead-dark'>" +
+                        "  <thead class='table-dark'>" +
                         "    <tr>" +
                         "      <th scope='col'>Jugador</th>" +
                         "      <th scope='col'>Jugador</th>" +

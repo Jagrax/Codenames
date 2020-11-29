@@ -1,6 +1,7 @@
 package ar.com.codenames.entity;
 
 import com.corundumstudio.socketio.SocketIOClient;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class Player implements Serializable, Comparable<Player> {
 
     public Player(SocketIOClient client, String excelname, String nickname, String roomName, Map<String, Player> PLAYER_LIST) {
         this.id = client.getSessionId().toString();
-        this.excelname = excelname;
+        this.excelname = StringUtils.isNotEmpty(excelname) ? excelname : nickname;
         this.nickname = nickname;
         this.roomName = roomName;
         this.role = Role.GUESSER;

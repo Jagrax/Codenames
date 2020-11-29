@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="d-grid min-vh-100 pb-3 bg-dark bg-gradient">
+<html lang="es" class="d-grid min-vh-100 bg-dark bg-gradient">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,7 +13,7 @@
         <script src="js/socket.io/socket.io.js"></script>
         <script src="js/moment.min.js"></script>
     </head>
-    <body class="d-grid w-100 min-vh-100 bg-transparent">
+    <body class="d-grid w-100 min-vh-100 bg-transparent py-3">
         <div class="animation-wrapper"></div>
         <div class="container-fluid" style="z-index:2">
             <h1 class="text-center text-white mb-5">CODE WORDS</h1>
@@ -193,61 +193,75 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="dlgGameConfigLabel">Configuración avanzada</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group row">
-                            <label for="boardSize" class="col-3 col-form-label col-form-label-sm text-nowrap">Tamaño del tablero</label>
-                            <div class="col-3">
-                                <input id="boardSize" type="number" min="3" max="6" class="form-control form-control-sm" value="5"/>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-floating">
+                                    <select class="form-control" id="boardSize" required>
+                                        <option value="3">3x3</option>
+                                        <option value="4">4x4</option>
+                                        <option value="5" selected>5x5</option>
+                                        <option value="6">6x6</option>
+                                    </select>
+                                    <label for="boardSize">Tamaño del tablero</label>
+                                </div>
                             </div>
-                            <label for="team-3-color" class="col-3 col-form-label col-form-label-sm text-nowrap">Equipo #3</label>
-                            <div class="col-3">
-                                <select id="team-3-color" class="form-control form-control-sm">
-                                    <option selected></option>
-                                    <option>Rojo</option>
-                                    <option>Azul</option>
-                                    <option>Verde</option>
-                                    <option>Amarillo</option>
-                                    <option>Cyan</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="turnDuration" class="col-3 col-form-label col-form-label-sm text-nowrap">Duración de cada turno</label>
-                            <div class="col-3">
-                                <input id="turnDuration" type="number" min="30" max="240" class="form-control form-control-sm" value="60"/>
-                            </div>
-                            <label for="team-4-color" class="col-3 col-form-label col-form-label-sm text-nowrap">Equipo #4</label>
-                            <div class="col-3">
-                                <select id="team-4-color" class="form-control form-control-sm">
-                                    <option selected></option>
-                                    <option>Rojo</option>
-                                    <option>Azul</option>
-                                    <option>Verde</option>
-                                    <option>Amarillo</option>
-                                    <option>Cyan</option>
-                                </select>
+                            <div class="col">
+                                <div class="form-floating">
+                                    <select id="team-3-color" class="form-control form-control-sm">
+                                        <option selected></option>
+                                        <option>Rojo</option>
+                                        <option>Azul</option>
+                                        <option>Verde</option>
+                                        <option>Amarillo</option>
+                                        <option>Cyan</option>
+                                    </select>
+                                    <label for="team-3-color">Equipo #3</label>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="form-group row">
-                            <label for="wordsByTeam" class="col-3 col-form-label col-form-label-sm text-nowrap">Palabras por equipo</label>
-                            <div class="col-3">
-                                <input id="wordsByTeam" type="number" min="1" max="36" class="form-control form-control-sm" value="8"/>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-floating">
+                                    <input id="turnDuration" type="number" min="30" max="240" class="form-control form-control-sm" value="60" placeholder="60"/>
+                                    <label for="turnDuration">Duración de cada turno</label>
+                                </div>
                             </div>
-                            <label for="team-5-color" class="col-3 col-form-label col-form-label-sm text-nowrap">Equipo #5</label>
-                            <div class="col-3">
-                                <select id="team-5-color" class="form-control form-control-sm">
-                                    <option selected></option>
-                                    <option>Rojo</option>
-                                    <option>Azul</option>
-                                    <option>Verde</option>
-                                    <option>Amarillo</option>
-                                    <option>Cyan</option>
-                                </select>
+                            <div class="col">
+                                <div class="form-floating">
+                                    <select id="team-4-color" class="form-control form-control-sm">
+                                        <option selected></option>
+                                        <option>Rojo</option>
+                                        <option>Azul</option>
+                                        <option>Verde</option>
+                                        <option>Amarillo</option>
+                                        <option>Cyan</option>
+                                    </select>
+                                    <label for="team-4-color">Equipo #4</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-floating">
+                                    <input id="wordsByTeam" type="number" min="1" max="36" class="form-control form-control-sm" value="8" placeholder="8"/>
+                                    <label for="wordsByTeam">Palabras por equipo</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating">
+                                    <select id="team-5-color" class="form-control form-control-sm">
+                                        <option selected></option>
+                                        <option>Rojo</option>
+                                        <option>Azul</option>
+                                        <option>Verde</option>
+                                        <option>Amarillo</option>
+                                        <option>Cyan</option>
+                                    </select>
+                                    <label for="team-5-color">Equipo #5</label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -260,9 +274,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="dlgGameStatisticsLabel">Estadisticas</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body"></div>
                 </div>

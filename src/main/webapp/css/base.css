@@ -2,9 +2,24 @@ html, body {
     place-items: center;
 }
 
-#game-board {
+.board-size-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.board-size-4 {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+
+.board-size-5 {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.board-size-6 {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 #turn-info-container,
@@ -90,6 +105,13 @@ h1 {
 .btn.tile:hover {
     transform: scale(1.1);
     box-shadow: 0 0 10px #ccc;
+}
+
+.btn.tile.btn-dark.unflipped {
+    background-image: url("../images/skull.svg");
+    background-size: auto 90%;
+    background-repeat: no-repeat;
+    background-position: 2% 50%;
 }
 
 input[type="search"]::-webkit-search-decoration,

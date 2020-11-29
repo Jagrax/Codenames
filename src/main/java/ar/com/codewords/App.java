@@ -93,7 +93,6 @@ public class App {
             if (PLAYER_LIST.get(client.getSessionId().toString()) == null) return;
             // Get the room the client was in
             String roomName = PLAYER_LIST.get(client.getSessionId().toString()).getRoomName();
-            logStats("GAME IN ROOM '" + roomName + "' WAS STARTED");
             startGame(client, data.getTeamColors(), data.getWordsPacksSelected(), data.getBoardSize(), data.getWordsByTeam(), data.getTurnDuration());
             broadcastServerStats();
         });
@@ -478,47 +477,54 @@ public class App {
         String field = null;
         JSONObject startGameResponse = new JSONObject();
         if (teamColors != null && teamColors.size() >= 2) {
-            if (wordsPacksSelected != null && !wordsPacksSelected.isEmpty()) {
-                if (validateWords(boardSize, teamColors.size(), wordsByTeam)) {
-                    // Creo los teams
-                    ArrayList<Team> teams = new ArrayList<>();
-                    for (String teamColor : teamColors) {
-                        teams.add(new Team(teamColor, coloursMap.get(teamColor)));
-                    }
-
-                    ArrayList<String> words = new ArrayList<>();
-                    for (String wordPack : wordsPacksSelected) {
-                        words.addAll(wordsFilesMap.get(wordPack));
-                    }
-
-                    // Inicializo el juego
-                    game = ROOM_LIST.get(roomName).initGame(teams, boardSize, wordsByTeam, words, turnDuration);
-
-                    ROOM_LIST.get(roomName).getTurnTimer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            Codewords game = ROOM_LIST.get(roomName).getGame();
-                            game.setTimer(game.getTimer() - 1);
-                            if (game.getTimer() < 0) {
-                                game.switchTurn();
-                                game.setTimer(game.getTimerAmount());
-                                gameUpdate(roomName);
-                            }
-                            for (String id : ROOM_LIST.get(roomName).getPlayers().keySet()) {
-                                SOCKET_LIST.get(id).sendEvent("timerUpdate", game.getTimer());
-                            }
+            if (!anyDuplicatedTeamColor(teamColors)) {
+                if (wordsPacksSelected != null && !wordsPacksSelected.isEmpty()) {
+                    if (validateWords(boardSize, teamColors.size(), wordsByTeam)) {
+                        // Creo los teams
+                        ArrayList<Team> teams = new ArrayList<>();
+                        for (String teamColor : teamColors) {
+                            teams.add(new Team(teamColor, coloursMap.get(teamColor)));
                         }
-                    }, 0, 1000);
 
-                    startGameResponse.put("game", new JSONObject(game).toString());
+                        ArrayList<String> words = new ArrayList<>();
+                        for (String wordPack : wordsPacksSelected) {
+                            words.addAll(wordsFilesMap.get(wordPack));
+                        }
+
+                        // Inicializo el juego
+                        game = ROOM_LIST.get(roomName).initGame(teams, boardSize, wordsByTeam, words, turnDuration);
+
+                        ROOM_LIST.get(roomName).getTurnTimer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                Codewords game = ROOM_LIST.get(roomName).getGame();
+                                game.setTimer(game.getTimer() - 1);
+                                if (game.getTimer() < 0) {
+                                    game.switchTurn();
+                                    game.setTimer(game.getTimerAmount());
+                                    gameUpdate(roomName);
+                                }
+                                for (String id : ROOM_LIST.get(roomName).getPlayers().keySet()) {
+                                    SOCKET_LIST.get(id).sendEvent("timerUpdate", game.getTimer());
+                                }
+                            }
+                        }, 0, 1000);
+
+                        logStats("GAME IN ROOM '" + roomName + "' WAS STARTED");
+
+                        startGameResponse.put("game", new JSONObject(game).toString());
+                    } else {
+                        success = false;
+                        msg = "Cantidad de palabras minimo no alcanzado. Es necesario agrandar el tablero o reducir la cantidad de palabras por equipo (Configuracion avanzada)";
+                    }
                 } else {
                     success = false;
-                    msg = "Cantidad de palabras minimo no alcanzado. Es necesario agrandar el tablero o reducir la cantidad de palabras por equipo (Configuracion avanzada)";
+                    msg = "Debe seleccionar al menos 1 pack de palabras";
+                    field = "words-packs";
                 }
             } else {
                 success = false;
-                msg = "Debe seleccionar al menos 1 pack de palabras";
-                field = "words-packs";
+                msg = "No puede haber 2 equipos con el mismo color";
             }
         } else {
             success = false;
@@ -536,6 +542,17 @@ public class App {
             broadcastServerStats();
             gameUpdate(roomName);
         }
+    }
+
+    private boolean anyDuplicatedTeamColor(ArrayList<String> teamColors) {
+        Set<String> temp = new HashSet<>();
+        for (String teamColor : teamColors) {
+            if (!temp.add(teamColor)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private boolean validateWords(int boardSize, int teams, int wordsByTeam) {
