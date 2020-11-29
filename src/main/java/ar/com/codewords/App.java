@@ -89,7 +89,11 @@ public class App {
 
 
         server.addEventListener("startGame", RequestObject.class, (client, data, ackSender) -> {
-            logEvent("startGame", client);
+            // Prevent Crash
+            if (PLAYER_LIST.get(client.getSessionId().toString()) == null) return;
+            // Get the room the client was in
+            String roomName = PLAYER_LIST.get(client.getSessionId().toString()).getRoomName();
+            logStats("GAME IN ROOM '" + roomName + "' WAS STARTED");
             startGame(client, data.getTeamColors(), data.getWordsPacksSelected(), data.getBoardSize(), data.getWordsByTeam(), data.getTurnDuration());
             broadcastServerStats();
         });
@@ -134,22 +138,25 @@ public class App {
         // Data: x and y location of tile in grid
         server.addEventListener("clickTile", RequestObject.class, (client, data, ackSender) -> clickTile(client, data));
 
-
-
-
-
-
         server.addEventListener("requestGameReportHtml", RequestObject.class, (client, data, ackSender) -> {
-            logEvent("requestGameReport", client);
-            Room room = ROOM_LIST.get(client.getSessionId().toString());
+            // Prevent Crash
+            if (PLAYER_LIST.get(client.getSessionId().toString()) == null) return;
+            // Get the room the client was in
+            String roomName = PLAYER_LIST.get(client.getSessionId().toString()).getRoomName();
+            Room room = ROOM_LIST.get(roomName);
             if (room != null) {
                 client.sendEvent("responseGameReportHtml", room.getGame().generateReportHtml());
             }
         });
 
         server.addEventListener("sendSticker", RequestObject.class, (client, data, ackSender) -> {
-            logEvent("sendSticker", client);
-            server.getBroadcastOperations().sendEvent("stickerResponse", data.getSticker());
+            // Prevent Crash
+            if (PLAYER_LIST.get(client.getSessionId().toString()) == null) return;
+            // Get the room the client was in
+            String roomName = PLAYER_LIST.get(client.getSessionId().toString()).getRoomName();
+            for (String id : ROOM_LIST.get(roomName).getPlayers().keySet()) {
+                SOCKET_LIST.get(id).sendEvent("stickerResponse", data.getSticker());
+            }
         });
 
         server.start();
@@ -460,15 +467,6 @@ public class App {
         log.info(stats + addition);
     }
 
-    /* ------------------------- OK ------------------------- */
-
-
-
-
-
-
-
-
     private void startGame(SocketIOClient client, ArrayList<String> teamColors, ArrayList<String> wordsPacksSelected, int boardSize, int wordsByTeam, int turnDuration) {
         // Prevent Crash
         if (PLAYER_LIST.get(client.getSessionId().toString()) == null) return;
@@ -543,29 +541,6 @@ public class App {
     private boolean validateWords(int boardSize, int teams, int wordsByTeam) {
         int maxWords = boardSize * boardSize;
         return ((wordsByTeam * teams) + 1) < maxWords - 1;
-    }
-
-    private void logEvent(String eventName, SocketIOClient client) {
-        String clientId = client.getSessionId().toString();
-        String clientIp = client.getHandshakeData().getAddress().getHostString();
-        String nickname = null;
-        Room room = ROOM_LIST.get(clientId);
-        if (room != null) {
-            Player player = room.getPlayer(client);
-            if (player != null) nickname += ", nickname=" + player.getNickname();
-        }
-        String msg = "[REQUEST]";
-        if (eventName != null) {
-            msg += " EventName='" + eventName + "'.";
-        }
-
-        msg += " Client[sessionId=" + clientId + ", ip=" + clientIp;
-        if (nickname != null) {
-            msg += ", nickname=" + nickname;
-        }
-
-        msg += "]";
-        log.info(msg);
     }
 
     private void broadcastServerStats() {

@@ -67,7 +67,7 @@ public class Codewords {
 
     private Registro registroPartidaActual;
 
-    private ArrayList<Registro> registros;
+    private final ArrayList<Registro> registros;
 
     private int lastQuantityOfRegistrosInReport = 0;
 
@@ -385,59 +385,209 @@ public class Codewords {
         return over;
     }
 
-    public void setOver(boolean over) {
-        this.over = over;
-    }
-
     public Board getBoard() {
         return board;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
-    }
-
-    public Integer getStartedLastGameTeamId() {
-        return startedLastGameTeamId;
-    }
-
-    public void setStartedLastGameTeamId(Integer startedLastGameTeamId) {
-        this.startedLastGameTeamId = startedLastGameTeamId;
-    }
-
-    public Registro getRegistroPartidaActual() {
-        return registroPartidaActual;
-    }
-
-    public void setRegistroPartidaActual(Registro registroPartidaActual) {
-        this.registroPartidaActual = registroPartidaActual;
-    }
-
-    public ArrayList<Registro> getRegistros() {
-        return registros;
-    }
-
-    public void setRegistros(ArrayList<Registro> registros) {
-        this.registros = registros;
-    }
-
-    public int getLastQuantityOfRegistrosInReport() {
-        return lastQuantityOfRegistrosInReport;
-    }
-
-    public void setLastQuantityOfRegistrosInReport(int lastQuantityOfRegistrosInReport) {
-        this.lastQuantityOfRegistrosInReport = lastQuantityOfRegistrosInReport;
-    }
-
-    public StringBuilder getGameReport() {
-        return gameReport;
-    }
-
-    public void setGameReport(StringBuilder gameReport) {
-        this.gameReport = gameReport;
-    }
-
     public Object generateReportHtml() {
+        if (lastQuantityOfRegistrosInReport == registros.size()) return gameReport != null ? gameReport.toString() : "<p>Aun no hay estadisticas computadas</p>";
+
+        Map<Integer, Set<Player>> playersByTeam = getPlayersByTeam();
+        Map<Player, Integer> winsByPlayer = new HashMap<>();
+        Map<Player, Integer> defeatsByPlayer = new HashMap<>();
+        Map<Player, Integer> spymasterWinsByPlayer = new HashMap<>();
+        Map<Player, Integer> spymasterDefeatsByPlayer = new HashMap<>();
+        Map<Player, Integer> spymasterWithoutBlacksWinsByPlayer = new HashMap<>();
+        Map<Player, Integer> deathTilesByPlayer = new HashMap<>();
+        Map<Team, Integer> winsByTeam = new HashMap<>();
+        Map<Team, Integer> deathTilesByTeam = new HashMap<>();
+        for (Integer teamId : teams.keySet()) {
+            winsByTeam.put(teams.get(teamId), 0);
+            deathTilesByTeam.put(teams.get(teamId), 0);
+        }
+
+        Set<Player> allPlayers = new TreeSet<>();
+        for (Registro registro : registros) allPlayers.addAll(registro.getPlayers());
+
+        for (Registro registro : registros) {
+            Integer countWinsByTeam = winsByTeam.get(teams.get(registro.getWinnerTeamId()));
+            winsByTeam.put(teams.get(registro.getWinnerTeamId()), ++countWinsByTeam);
+
+            if (registro.isDeathTileFlipped()) {
+                for (Integer teamId : teams.keySet()) if (!registro.getWinnerTeamId().equals(teamId)) {
+                    Integer contDeathTiles = deathTilesByTeam.get(teams.get(teamId));
+                    deathTilesByTeam.put(teams.get(teamId), ++contDeathTiles);
+                }
+
+                deathTilesByPlayer.putIfAbsent(registro.getPlayerWhoTouchedDeathTile(), 0);
+                Integer deathTilesOfPlayer = deathTilesByPlayer.get(registro.getPlayerWhoTouchedDeathTile());
+                deathTilesByPlayer.put(registro.getPlayerWhoTouchedDeathTile(), ++deathTilesOfPlayer);
+            }
+
+            for (Integer teamId : playersByTeam.keySet()) {
+                for (Player player : playersByTeam.get(teamId)) {
+                    winsByPlayer.putIfAbsent(player, 0);
+                    defeatsByPlayer.putIfAbsent(player, 0);
+                    spymasterWinsByPlayer.putIfAbsent(player, 0);
+                    spymasterDefeatsByPlayer.putIfAbsent(player, 0);
+                    deathTilesByPlayer.putIfAbsent(player, 0);
+                    spymasterWithoutBlacksWinsByPlayer.putIfAbsent(player, 0);
+
+                    // Si esta en este Registro, significa que estuvo conectado durante esta partida
+                    Player playerInCurrentRegistry = getPlayerInSet(registro.getPlayers(), player);
+                    if (playerInCurrentRegistry != null) {
+                        // Si el jugador actual estuvo en este equipo durante esa partida me fijo si gano o perdio
+                        if (playerInCurrentRegistry.getTeamId().equals(player.getTeamId())) {
+                            if (player.getTeamId().equals(registro.getWinnerTeamId())) {
+                                Integer cantGanadas = winsByPlayer.get(player);
+                                winsByPlayer.put(player, ++cantGanadas);
+                                if (playerInCurrentRegistry.getRole().equals(Player.Role.SPYMASTER)) {
+                                    // Reutilizo la variable
+                                    cantGanadas = spymasterWinsByPlayer.get(player);
+                                    spymasterWinsByPlayer.put(player, ++cantGanadas);
+                                    if (!registro.isDeathTileFlipped()) {
+                                        // Reutilizo la variable
+                                        cantGanadas = spymasterWithoutBlacksWinsByPlayer.get(player);
+                                        spymasterWithoutBlacksWinsByPlayer.put(player, ++cantGanadas);
+                                    }
+                                }
+                            } else {
+                                Integer cantPerdidas = defeatsByPlayer.get(player);
+                                defeatsByPlayer.put(player, ++cantPerdidas);
+                                if (playerInCurrentRegistry.getRole().equals(Player.Role.SPYMASTER)) {
+                                    // Reutilizo la variable
+                                    cantPerdidas = spymasterDefeatsByPlayer.get(player);
+                                    spymasterDefeatsByPlayer.put(player, ++cantPerdidas);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        gameReport = new StringBuilder(
+                "<h5>Puntajes individuales</h5>" +
+                        "<table class='table table-sm table-bordered mb-3'>" +
+                        "  <thead class='thead-dark'>" +
+                        "    <tr>" +
+                        "      <th scope='col'>Jugadores</th>" +
+                        "      <th scope='col'>Ganadas</th>" +
+                        "      <th scope='col'>Perdidas</th>" +
+                        "      <th scope='col'>Balance</th>" +
+                        "    </tr>" +
+                        "  </thead>" +
+                        "  <tbody>");
+        for (Player player : allPlayers) {
+            gameReport.append("<tr><td>").append(player.getExcelname()).append("</td><td>").append(winsByPlayer.get(player)).append("</td><td>").append(defeatsByPlayer.get(player)).append("</td><td>").append(winsByPlayer.get(player) - defeatsByPlayer.get(player)).append("</td></tr>");
+        }
+
+        gameReport.append(
+                "  </tbody>" +
+                        "</table>" +
+                        "<h5>Puntajes por equipo</h5>" +
+                        "<table class='table table-sm table-bordered mb-3'>" +
+                        "  <thead class='thead-dark'>" +
+                        "    <tr>" +
+                        "      <th scope='col'></th>");
+        for (Integer teamId : teams.keySet()) {
+            gameReport.append("<th scope='col'>").append(teams.get(teamId).getName()).append("</th>");
+        }
+        gameReport.append(
+                "    </tr>" +
+                        "  </thead>" +
+                        "  <tbody>" +
+                        "    <tr>" +
+                        "      <td>Ganadas</td>");
+        for (Integer teamId : teams.keySet()) {
+            gameReport.append("<td>").append(winsByTeam.get(teams.get(teamId))).append("</td>");
+        }
+
+        gameReport.append(
+                "    </tr>" +
+                        "  </tbody>" +
+                        "</table>" +
+                        "<h5>Puntajes individuales como Spymaster</h5>" +
+                        "<table class='table table-sm table-bordered mb-3'>" +
+                        "  <thead class='thead-dark'>" +
+                        "    <tr>" +
+                        "      <th scope='col'>Jugadores</th>" +
+                        "      <th scope='col'>Ganadas</th>" +
+                        "      <th scope='col'>Ganadas (sin negra)</th>" +
+                        "      <th scope='col'>Perdidas</th>" +
+                        "    </tr>" +
+                        "  </thead>" +
+                        "  <tbody>");
+        for (Player player : allPlayers) {
+            gameReport.append("<tr><td>").append(player.getExcelname()).append("</td><td>").append(spymasterWinsByPlayer.get(player)).append("</td><td>").append(spymasterWithoutBlacksWinsByPlayer.get(player)).append("</td><td>").append(spymasterDefeatsByPlayer.get(player)).append("</td></tr>");
+        }
+        gameReport.append(
+                "  </tbody>" +
+                        "</table>" +
+                        "<h5>Negras por equipo</h5>" +
+                        "<table class='table table-sm table-bordered mb-3'>" +
+                        "  <thead class='thead-dark'>" +
+                        "    <tr>" +
+                        "      <th scope='col'></th>");
+        for (Integer teamId : teams.keySet()) {
+            gameReport.append("<th scope='col'>").append(teams.get(teamId).getName()).append("</th>");
+        }
+        gameReport.append(
+                "    </tr>" +
+                        "  </thead>" +
+                        "  <tbody>" +
+                        "    <tr>" +
+                        "      <td>Negras</td>");
+        for (Integer teamId : teams.keySet()) {
+            gameReport.append("<td>").append(deathTilesByTeam.get(teams.get(teamId))).append("</td>");
+        }
+
+        gameReport.append(
+                "    </tr>" +
+                        "  </tbody>" +
+                        "</table>" +
+                        "<h5>Negras por jugador</h5>" +
+                        "<table class='table table-sm table-bordered mb-3'>" +
+                        "  <thead class='thead-dark'>" +
+                        "    <tr>" +
+                        "      <th scope='col'>Jugador</th>" +
+                        "      <th scope='col'>Jugador</th>" +
+                        "    </tr>" +
+                        "  </thead>" +
+                        "  <tbody>");
+        for (Player player : allPlayers) {
+            gameReport.append("<tr><td>").append(player.getExcelname()).append("</td><td>").append(deathTilesByPlayer.get(player)).append("</td></tr>");
+        }
+
+        gameReport.append(
+                "  </tbody>" +
+                        "</table>");
+
+        lastQuantityOfRegistrosInReport = registros.size();
+
+        return gameReport.toString();
+    }
+
+    private Map<Integer, Set<Player>> getPlayersByTeam() {
+        Map<Integer, Set<Player>> playersByTeam = new HashMap<>();
+        for (Registro registro : registros) {
+            for (Player player : registro.getPlayers()) {
+                // Si no tengo ningun jugador de este equipo, inicializo el Set
+                playersByTeam.computeIfAbsent(player.getTeamId(), k -> new LinkedHashSet<>());
+                // Agrego al jugador al Set del equipo al que corresponde
+                playersByTeam.get(player.getTeamId()).add(player);
+            }
+        }
+
+        return playersByTeam;
+    }
+
+    private Player getPlayerInSet(Set<Player> sourcePlayers, Player playerToFind) {
+        if (sourcePlayers != null && !sourcePlayers.isEmpty()) {
+            for (Player sourcePlayer : sourcePlayers) {
+                if (sourcePlayer.equals(playerToFind)) return sourcePlayer;
+            }
+        }
         return null;
     }
 }

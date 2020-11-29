@@ -17,7 +17,7 @@ public class Player implements Serializable, Comparable<Player> {
 
     @Override
     public int compareTo(Player o) {
-        return this.excelname.compareTo(o.excelname);
+        return this.nickname.compareTo(o.nickname);
     }
 
     public enum Role {
@@ -104,11 +104,11 @@ public class Player implements Serializable, Comparable<Player> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return Objects.equals(excelname, player.excelname);
+        return Objects.equals(nickname, player.nickname);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(excelname);
+        return Objects.hash(nickname);
     }
 }
