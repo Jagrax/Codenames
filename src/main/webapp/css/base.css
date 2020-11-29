@@ -36,7 +36,7 @@ h1 {
     -webkit-box-reflect: below 1px linear-gradient(transparent, #0008);
     line-height: 0.80em;
     outline: none;
-    animation: glowing-tubelight 5s linear infinite;
+    /*animation: glowing-tubelight 5s linear infinite;*/
 }
 
 @keyframes glowing-tubelight {
