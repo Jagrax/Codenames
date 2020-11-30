@@ -9,6 +9,7 @@ public class Tile {
     private boolean flipped;
     private String word;
     private Type type;
+    private boolean addTime;
 
     public enum Type {
         COLORED, NEUTRAL, DEATH
@@ -18,6 +19,7 @@ public class Tile {
         this.x = x;
         this.y = y;
         this.type = Type.NEUTRAL;
+        this.addTime = false;
     }
 
     public int getX() {
@@ -104,14 +106,25 @@ public class Tile {
         type = Type.COLORED;
     }
 
+    public boolean isAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(boolean addTime) {
+        this.addTime = addTime;
+    }
+
     @Override
     public String toString() {
         return "Tile ["
                 + "x=" + x + ", "
                 + "y=" + y + ", "
                 + ((team != null) ? "team=" + team + ", " : "")
+                + ((teamId != null) ? "teamId=" + teamId + ", " : "")
                 + "flipped=" + flipped + ", "
-                + ((word != null) ? "word=" + word : "")
+                + ((word != null) ? "word=" + word + ", " : "")
+                + ((type != null) ? "type=" + type + ", " : "")
+                + "addTime=" + addTime
                 + "]";
     }
 }

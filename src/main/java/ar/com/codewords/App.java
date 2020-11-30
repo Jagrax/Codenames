@@ -158,6 +158,10 @@ public class App {
             }
         });
 
+        server.addEventListener("switchAddTime", Boolean.class, (client, data, ackSender) -> {
+            switchAddTime(client, data);
+        });
+
         server.start();
 
         initWords();
@@ -562,6 +566,19 @@ public class App {
 
     private void broadcastServerStats() {
         server.getBroadcastOperations().sendEvent("serverStats", new JSONObject().put("rooms", ROOM_LIST.values()).toString());
+    }
+
+    // Switch role function
+    // Gets clients requested role and switches it
+    private void switchAddTime(SocketIOClient client, Boolean useTilesWithAddTime) {
+        // Prevent Crash
+        if (PLAYER_LIST.get(client.getSessionId().toString()) == null) return;
+        // Get the room that the client called from
+        String roomName = PLAYER_LIST.get(client.getSessionId().toString()).getRoomName();
+        // Set config of addTime for tiles
+        ROOM_LIST.get(roomName).getGame().setUseTilesWithAddTime(useTilesWithAddTime);
+        // Update everyone in the room
+        gameUpdate(roomName);
     }
 
     private void initWords() {

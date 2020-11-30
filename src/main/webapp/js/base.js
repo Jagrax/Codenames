@@ -41,6 +41,7 @@ let endTurn = $('#end-turn');
 let newGame = $('#new-game');
 let reqGameStatistics = $('#reqGameStatistics');
 let switchRole = $('#role-spymaster');
+let switchAddTime = $('#game-tile-addtime');
 let searchStickerInput = $('#searchSticker');
 // UI Elements
 let turnMessage = $('#status');
@@ -138,6 +139,10 @@ function sendSticker(stickerName) {
 
 reqGameStatistics.on("click", function () {
     socket.emit('requestGameReportHtml', {});
+});
+
+switchAddTime.on("click", function () {
+    socket.emit('switchAddTime', !!switchAddTime.is(':checked'));
 });
 
 // Server Responses to this client
@@ -282,7 +287,6 @@ socket.on('timerUpdate', function (data) {
 socket.on('newGameResponse', function (data) {
     data = JSON.parse(data);
     if (data.success) {
-        switchRole.prop('checked', false);
         gameLogTextarea.val("Registro de la partida");
         wipeBoard();
     }
@@ -293,6 +297,7 @@ socket.on('switchRoleResponse', function (data) {
     data = JSON.parse(data);
     if (data.success) {
         playerRole = data.role;
+        switchRole.prop('checked', playerRole !== 'GUESSER');
         wipeBoard();
     }
 });
@@ -377,6 +382,8 @@ function updateInfo(game, team) {
 
     // Disable end turn button for opposite team or spymaster
     endTurn.attr("disabled", team !== game.turnId || playerRole === 'SPYMASTER');
+
+    switchAddTime.prop('checked', game.useTilesWithAddTime);
 }
 
 // Update the board
@@ -405,6 +412,10 @@ function updateBoard(board, teams) {
                     button.addClass('font-weight-bold');
                     button.addClass('bg-gradient');
                     button.removeClass('unflipped');
+                }
+
+                if (board.tiles[x][y].addTime) {
+                    button.addClass('btn-addtime');
                 }
             }
         }

@@ -73,6 +73,8 @@ public class Codewords {
 
     public StringBuilder gameReport;
 
+    private boolean useTilesWithAddTime;
+
     public Codewords(ArrayList<Team> teams, int boardSize, int wordsByTeam, ArrayList<String> words, Integer turnDuration) {
         // Set timer value
         this.timerAmount = turnDuration != null ? turnDuration + 1 : 61;
@@ -160,6 +162,10 @@ public class Codewords {
             if (!tile.getTeamId().equals(turnId)) {
                 // Switch turn if opposite teams tile was flipped
                 switchTurn();
+            }
+
+            if (tile.isAddTime()) {
+                timer += timerAmount;
             }
         }
         checkWin(playersInRoom); // See if the game is over
@@ -258,6 +264,8 @@ public class Codewords {
         // Selecciono el equipo que comenzara la partida
         Integer currentTeam = turnId;
 
+        ArrayList<Integer> tmpAddTimeTiles = new ArrayList<>();
+
         // Recorro las baldosas asignandoles un color (equipo)
         for (int i = 0; i < ((wordsByTeam * teams.size()) + 1); i++) {
             // Obtengo unas coordenadas aleatorias
@@ -272,6 +280,14 @@ public class Codewords {
             board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).setTeamId(currentTeam);
             board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).setTeam(teams.get(currentTeam));
             board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).setColored();
+
+            if (useTilesWithAddTime) {
+                // Hago que la primer tile sea la que te agregar 60"
+                if (!tmpAddTimeTiles.contains(currentTeam)) {
+                    tmpAddTimeTiles.add(currentTeam);
+                    board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).setAddTime(true);
+                }
+            }
 
             int nextTeamId = currentTeam + 1;
             if (nextTeamId >= teams.size()) {
@@ -566,6 +582,14 @@ public class Codewords {
         lastQuantityOfRegistrosInReport = registros.size();
 
         return gameReport.toString();
+    }
+
+    public boolean isUseTilesWithAddTime() {
+        return useTilesWithAddTime;
+    }
+
+    public void setUseTilesWithAddTime(boolean useTilesWithAddTime) {
+        this.useTilesWithAddTime = useTilesWithAddTime;
     }
 
     private Map<Integer, Set<Player>> getPlayersByTeam() {
