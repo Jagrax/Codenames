@@ -151,7 +151,7 @@ public class Codewords {
             registroPartidaActual.setPlayerWhoTouchedDeathTile(whoTouchedTile);
             registroPartidaActual.setWinnerTeamId(winnerId.get(0));
             registros.add(registroPartidaActual);
-        } else if (tile.isNeutral()) {
+        } else if (tile.isNeutral() && !tile.isAddTime()) {
             // Switch turn if neutral was flipped
             switchTurn();
         } else {
@@ -163,11 +163,12 @@ public class Codewords {
                 // Switch turn if opposite teams tile was flipped
                 switchTurn();
             }
-
-            if (tile.isAddTime()) {
-                timer += timerAmount;
-            }
         }
+
+        if (tile.isAddTime()) {
+            timer += timerAmount;
+        }
+
         checkWin(playersInRoom); // See if the game is over
         return true;
     }
