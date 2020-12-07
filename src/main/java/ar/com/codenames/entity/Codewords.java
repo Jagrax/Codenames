@@ -261,6 +261,17 @@ public class Codewords {
         // Hago que la baldosa esas cooredanas sea la negra
         board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).setDeath();
 
+        if (useTilesWithAddTime) {
+            randomCoordinates = randomCoordinates();
+            // Si se dio que justo agarre la que es negra, vuelvo a generar las coordenadas
+            while (board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).isDeath()) {
+                randomCoordinates = randomCoordinates();
+            }
+
+            // Hago que una tile sea la que te agregar 60"
+            board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).setAddTime(true);
+        }
+
         // Selecciono el equipo que comenzara la partida
         Integer currentTeam = turnId;
 
@@ -271,8 +282,8 @@ public class Codewords {
             // Obtengo unas coordenadas aleatorias
             randomCoordinates = randomCoordinates();
 
-            // Si a esta baldosa ya se le asigno un color (no es mas neutral), busco una nueva
-            while (!board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).isNeutral()) {
+            // Si a esta baldosa ya se le asigno un color (no es mas neutral) o tiene el timer, busco una nueva
+            while (!board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).isNeutral() || board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).isAddTime()) {
                 randomCoordinates = randomCoordinates();
             }
 
@@ -280,14 +291,6 @@ public class Codewords {
             board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).setTeamId(currentTeam);
             board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).setTeam(teams.get(currentTeam));
             board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).setColored();
-
-            if (useTilesWithAddTime) {
-                // Hago que la primer tile sea la que te agregar 60"
-                if (!tmpAddTimeTiles.contains(currentTeam)) {
-                    tmpAddTimeTiles.add(currentTeam);
-                    board.getTile(randomCoordinates.getKey(), randomCoordinates.getValue()).setAddTime(true);
-                }
-            }
 
             int nextTeamId = currentTeam + 1;
             if (nextTeamId >= teams.size()) {
