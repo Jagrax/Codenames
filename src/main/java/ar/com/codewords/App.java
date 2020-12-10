@@ -441,7 +441,13 @@ public class App {
                     if (ROOM_LIST.get(roomName).getGame().flipTile(data.getX(), data.getY(), PLAYER_LIST.get(client.getSessionId().toString()), ROOM_LIST.get(roomName).getPlayers().values())) {
                         // Tell each player that a tile was flipped (text for on-screen game log)
                         for (String id : ROOM_LIST.get(roomName).getPlayers().keySet()) {
-                            SOCKET_LIST.get(id).sendEvent("serverMsgToLog", PLAYER_LIST.get(client.getSessionId().toString()).getNickname() + " ha tocado la palabra " + ROOM_LIST.get(roomName).getGame().getBoard().getTile(data.getX(), data.getY()).getWord());
+                            String playerNickname = PLAYER_LIST.get(client.getSessionId().toString()).getNickname();
+                            String flipedTileWord = ROOM_LIST.get(roomName).getGame().getBoard().getTile(data.getX(), data.getY()).getWord();
+                            String serverMsgToLog = playerNickname + " ha tocado la palabra " + flipedTileWord;
+                            if (ROOM_LIST.get(roomName).getGame().getBoard().getTile(data.getX(), data.getY()).isAddTime()) {
+                                serverMsgToLog += " y ha sumado 60\" extra!";
+                            }
+                            SOCKET_LIST.get(id).sendEvent("serverMsgToLog", serverMsgToLog);
                         }
                         // Update everyone in the room
                         gameUpdate(roomName);

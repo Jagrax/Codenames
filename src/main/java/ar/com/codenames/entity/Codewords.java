@@ -151,9 +151,9 @@ public class Codewords {
             registroPartidaActual.setPlayerWhoTouchedDeathTile(whoTouchedTile);
             registroPartidaActual.setWinnerTeamId(winnerId.get(0));
             registros.add(registroPartidaActual);
-        } else if (tile.isNeutral() && !tile.isAddTime()) {
+        } else if (tile.isNeutral()) {
             // Switch turn if neutral was flipped
-            switchTurn();
+            if (!tile.isAddTime()) switchTurn();
         } else {
             // Find the team of tile
             Team tileFlippedTeam = teams.get(tile.getTeamId());
