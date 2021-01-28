@@ -76,7 +76,7 @@ const songs = [
 		"name": "Echoes of Swing",
 		"filename": "songs/Echoes_Of_Swing_-_5_Yacht_Club_Swing.mp3",
 		"bpm": 162.2,
-		"startAt": 2500,
+		"startAt": 2450,
 		"artist": "Yacht Club Swing"
 	}
 ];
