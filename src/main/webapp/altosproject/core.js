@@ -68,14 +68,14 @@ const songs = [
 	{
 		"name": "Jive at Five",
 		"filename": "songs/Jive at Five 180.mp3",
-		"bpm": 181.8,
+		"bpm": 183,
 		"startAt": 4300,
 		"artist": "Count Basie and His Orchestra"
 	},
 	{
 		"name": "Echoes of Swing",
 		"filename": "songs/Echoes_Of_Swing_-_5_Yacht_Club_Swing.mp3",
-		"bpm": 162.2,
+		"bpm": 162,
 		"startAt": 2450,
 		"artist": "Yacht Club Swing"
 	}
